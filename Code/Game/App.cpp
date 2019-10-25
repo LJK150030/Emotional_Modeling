@@ -6,7 +6,6 @@
 #include "Engine/Core/WindowContext.hpp"
 #include "Engine/Core/Clock.hpp"
 #include "Engine/Memory/Mem.hpp"
-#include "Engine/Tools/Reports.hpp"
 
 App::App(): m_theGame(nullptr)
 {
@@ -138,11 +137,6 @@ bool App::HandleKeyPressed(const unsigned char key_code)
 			m_isPaused = true;
 		return true;
 
-	case F1_KEY:
-		if (!DEV_CONSOLE_IN_USE)
-			m_theGame->SetDeveloperMode(true);
-		return true;
-
 	case F8_KEY:
 		if (!DEV_CONSOLE_IN_USE)
 			HardRestart();
@@ -171,11 +165,6 @@ bool App::HandleKeyReleased(const unsigned char key_code)
 	case P_KEY:
 		m_isPaused = false;
 		return true;
-
-	case F1_KEY:
-		m_theGame->SetDeveloperMode(false);
-		return true;
-
 
 	default:
 		return m_theGame->HandleKeyReleased(key_code);

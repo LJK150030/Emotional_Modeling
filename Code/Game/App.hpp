@@ -17,10 +17,6 @@ public:
 	bool HandleQuitRequested();
 	void HardRestart();
 
-	static bool QuitRequest(EventArgs& args);
-	static bool PrintMemAlloc(EventArgs& args);
-	static bool LogMemAlloc(EventArgs& args);
-	static bool LogThreadedTest(EventArgs& args);
 private:
 	void BeginFrame() const;
 	void Update();

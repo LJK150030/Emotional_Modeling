@@ -1,22 +1,22 @@
 #pragma once
 #include "Engine/EngineCommon.hpp"
+#include "Engine/Core/EventSystem.hpp"
 
+//--------------------------------------------------------
+// Forward declirations
 struct Rgba;
 struct Vec2;
-
-//GameCommon is holding mainly global values that will be used thought the game
-
 class App;
+
+//---------------------------------------------------------
+// global game objects
 
 extern App* g_theApp;
 
-//Window config
-constexpr float WORLD_ASPECT = 1.7777777777777778f;
-
-//Debug global variables
-constexpr int NUM_DISC_VERTICES = 16;
-
+//----------------------------------------------------------
+// global game variables
 //Camera global variables
+constexpr float WORLD_ASPECT = 1.7777777777777778f;
 constexpr float WORLD_WIDTH = 71.1111111110f;
 constexpr float WORLD_HEIGHT = 40.0f;
 constexpr float WORLD_CENTER_X = WORLD_WIDTH / 2.f;
@@ -71,9 +71,31 @@ constexpr int F2_KEY = 113;
 constexpr int F8_KEY = 119;
 constexpr int TILDE_KEY = 192;
 
-// camera global variables
-constexpr float MAX_SCREEN_SHAKE = 2.0f;
-constexpr float SCREEN_SHAKE_REDUCTION = 1.0f;
+extern float g_startTime;
+//---------------------------------------------------------
+// global helper game functions
 
 void EngineStartup();
 void EngineShutdown();
+
+//---------------------------------------------------------
+// Dev console functions
+
+static bool DevConLog(EventArgs& args);
+static bool DevConLogEnableAll(EventArgs& args);
+static bool DevConLogDisableAll(EventArgs& args);
+static bool DevConLogEnable(EventArgs& args);
+static bool DevConLogDisable(EventArgs& args);
+static bool DevConsLogFlush(EventArgs& args);
+static bool QuitRequest(EventArgs& args);
+static bool PrintMemAlloc(EventArgs& args);
+static bool LogMemAlloc(EventArgs& args);
+
+//---------------------------------------------------------
+// Hooks
+void OutputLog(const LogMessageHeaderT* log_info);
+
+//---------------------------------------------------------
+// Unit tests
+static void LogTest( uint start_count );
+static bool LogThreadedTest(EventArgs& args);

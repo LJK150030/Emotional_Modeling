@@ -5,6 +5,7 @@
 #include "Engine/Core/DevConsole.hpp"
 #include "Engine/Memory/Mem.hpp"
 #include "ThirdParty/imGUI/imgui.h"
+#include "Engine/Core/Time.hpp"
 
 #define WINDOW_TITLE "Protogame3D"
 
@@ -166,6 +167,7 @@ void RunFrame()
 //-----------------------------------------------------------------------------------------------
 void Startup()
 {
+	g_startTime = GetCurrentTimeSecondsF();
 	tinyxml2::XMLDocument config;
 	config.LoadFile("Data/GameConfig.xml");
 	
@@ -206,7 +208,6 @@ int WINAPI WinMain(HINSTANCE application_instance_handle, HINSTANCE prev_instanc
 	while( !g_theApp->IsQuitting()) 
 	{
 		RunFrame();
-		Sleep(0);
 	}
 
 	Shutdown();

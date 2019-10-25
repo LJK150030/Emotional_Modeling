@@ -11,6 +11,7 @@
 #include "Game/App.hpp"
 
 NamedStrings g_gameConfigBlackboard;
+float g_startTime = 0.0f;
 RandomNumberGenerator g_randomNumberGenerator(15);
 WindowContext* g_theWindow = nullptr;
 RenderContext* g_theRenderer = nullptr;
@@ -21,7 +22,7 @@ Clock* g_theClock = nullptr;
 LogSystem* g_theLogSystem = nullptr;
 AsyncRingBuffer* g_messageBuffer = nullptr;
 ImGUISystem* g_imGUI = nullptr;
-extern App* g_theApp = nullptr;
+App* g_theApp = nullptr;
 
 //--------------------------------------------------------------
 // Dev Console Static functions'
@@ -118,18 +119,6 @@ STATIC bool DevConsLogFlush(EventArgs& args)
 	return true;
 }
 
-// log_hook_dev_console
-void OutputLog(const LogMessageHeaderT* log_info)
-{
-	char filter[256];
-	char message[256];
-
-	memcpy(filter, log_info->filter, log_info->size_of_filter);
-	memcpy(message, log_info->message, log_info->size_of_message);
-
-	DebuggerPrintf("%s: %s \n", filter, message);
-}
-
 
 STATIC bool QuitRequest(EventArgs& args)
 {
@@ -150,6 +139,21 @@ STATIC bool LogMemAlloc(EventArgs& args)
 	UNUSED(args);
 	MemTrackLogLiveAllocations();
 	return true;
+}
+
+//----------------------------------------------------------------
+//Hooks
+
+// log_hook_dev_console
+void OutputLog(const LogMessageHeaderT* log_info)
+{
+	char filter[256];
+	char message[256];
+
+	memcpy(filter, log_info->filter, log_info->size_of_filter);
+	memcpy(message, log_info->message, log_info->size_of_message);
+
+	DebuggerPrintf("%s: %s \n", filter, message);
 }
 
 //--------------------------------------------------------------
@@ -173,17 +177,18 @@ void EngineStartup()
 	g_theEventSystem->SubscribeEventCallbackFunction("ShowMemAlloc", PrintMemAlloc);
 	g_theEventSystem->SubscribeEventCallbackFunction("LogMemAlloc", LogMemAlloc);
 	g_theRenderer->Startup();
+
+	g_theDevConsole = new DevConsole;
+	g_theDevConsole->Startup(g_theClock);
 	
 	g_theDebugRenderer = new DebugRender;
 	g_theDebugRenderer->Startup(g_theRenderer);
 
-	g_theDevConsole = new DevConsole;
-	g_theDevConsole->Startup(g_theClock);
-
 	g_imGUI = new ImGUISystem(g_theRenderer);
 	g_imGUI->Startup();
-
+	
 	Dispatcher::Init(7);
+	LogSystemInit(LOG_DIR.c_str());
 }
 
 void EngineShutdown()
