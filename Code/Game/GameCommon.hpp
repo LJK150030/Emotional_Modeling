@@ -5,15 +5,10 @@ struct Rgba;
 struct Vec2;
 
 //GameCommon is holding mainly global values that will be used thought the game
-//constexpr float CLIENT_ASPECT = 2.0f; // We are requesting a 1:1 aspect (square) window area
 
 class App;
-class RenderContext;
-class InputSystem;
-class AudioSystem;
 
 extern App* g_theApp;
-extern AudioSystem* g_theAudio;
 
 //Window config
 constexpr float WORLD_ASPECT = 1.7777777777777778f;
@@ -80,5 +75,5 @@ constexpr int TILDE_KEY = 192;
 constexpr float MAX_SCREEN_SHAKE = 2.0f;
 constexpr float SCREEN_SHAKE_REDUCTION = 1.0f;
 
-//One-off drawing functions
-void DrawLine(const Vec2& start, const Vec2& end, float thickness, const Rgba& tint);
+void EngineStartup();
+void EngineShutdown();

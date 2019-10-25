@@ -198,7 +198,6 @@ void Game::Shutdown()
 
 void Game::Update(const double delta_seconds)
 {
-	g_profiler->ProfilePush("Game::Update");
 	m_time += static_cast<float>(delta_seconds);
 	m_currentFrame++;
 	m_deltaMovement = m_cameraMovementScale * static_cast<float>(delta_seconds);
@@ -243,7 +242,6 @@ void Game::Update(const double delta_seconds)
 	m_pointLights4.m_position = m_pl4Position;
 	g_theRenderer->UpdateLightAtIndex(4, m_pointLights4);
 	
-	g_profiler->ProfilePop();
 }
 
 void Game::UpdateImGUI() const

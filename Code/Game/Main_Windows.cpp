@@ -9,8 +9,6 @@
 #define WINDOW_TITLE "Protogame3D"
 
 
-extern App* g_theApp = nullptr;
-
 // The WndProc function for imGUI third party tool
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wPram, LPARAM lParam);
 
@@ -170,10 +168,12 @@ void Startup()
 {
 	tinyxml2::XMLDocument config;
 	config.LoadFile("Data/GameConfig.xml");
+	
 	XmlElement* root = config.RootElement();
 	g_gameConfigBlackboard.PopulateFromXmlElementAttributes(*root);
 	const float world_aspect = g_gameConfigBlackboard.GetValue("windowAspect", WORLD_ASPECT);
 	CreateWindowAndRenderContext( world_aspect );
+	
 	g_theApp = new App();
 	g_theApp->Startup();
 }
@@ -210,7 +210,8 @@ int WINAPI WinMain(HINSTANCE application_instance_handle, HINSTANCE prev_instanc
 	}
 
 	Shutdown();
-	
+
+	//useful to see if there was any memory leaked in the end
 	MemTrackLogLiveAllocations();
 
 	return 0;

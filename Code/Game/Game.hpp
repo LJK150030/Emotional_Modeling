@@ -1,7 +1,6 @@
 #pragma once
 #include "Engine/Math/Vec3.hpp"
 #include "Engine/Math/Matrix44.hpp"
-#include "Engine/Core/NamedStrings.hpp"
 #include "Engine/Renderer/RenderContext.hpp"
 
 class Camera;
@@ -13,7 +12,6 @@ class Game
 {
 public:
 	bool m_inDevMode;
-
 
 public:
 	Game();
