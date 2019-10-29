@@ -6,6 +6,7 @@ class Camera;
 class Shader;
 class GPUMesh;
 class Material;
+class Actor;
 
 class Game
 {
@@ -38,4 +39,11 @@ private:
 	Vec3 m_camPosition		= Vec3(0.0f, 0.0f, -10.0f); // we'll start 10 back; 
 	Vec3 m_camEuler			= Vec3(0.0f, 0.0f, 0.0f); 
 	float m_camFOVDegrees	= 90.0f;
+
+	Actor* m_testActor = nullptr;
+
+private:
+	void TestImGui() const;
+
+	void LoadGameAssets();
 };

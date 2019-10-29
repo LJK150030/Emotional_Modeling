@@ -1,19 +1,28 @@
 #include "Game/Entity.hpp"
 #include "Game/Game.hpp"
-#include "Engine/Core/VertexUtils.hpp"
 
 //will own entity (PlayerShip, Asteroid, Bullet)
 
-Entity::Entity(Game* the_game)
+Entity::Entity(Game* the_game, std::string& name): m_game(the_game), m_name(name)
 {
-	m_game = the_game;
 }
 
 Entity::~Entity()
 {
 }
 
-Vec2& Entity::GetPosition() const
+Game* Entity::GetGame() const
 {
-	return *m_position;
+	return m_game;
 }
+
+bool Entity::IsDead() const
+{
+	return m_isDead;
+}
+
+bool Entity::IsGarbage() const
+{
+	return m_isGarbage;
+}
+
