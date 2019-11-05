@@ -10,9 +10,8 @@
 #include "Engine/Async/Dispatcher.hpp"
 #include "Game/App.hpp"
 
-NamedStrings g_gameConfigBlackboard;
-float g_startTime = 0.0f;
-RandomNumberGenerator g_randomNumberGenerator(15);
+
+RandomNumberGenerator g_randomNumberGenerator(32);
 WindowContext* g_theWindow = nullptr;
 RenderContext* g_theRenderer = nullptr;
 EventSystem* g_theEventSystem = nullptr;
@@ -23,6 +22,9 @@ LogSystem* g_theLogSystem = nullptr;
 AsyncRingBuffer* g_messageBuffer = nullptr;
 ImGUISystem* g_imGUI = nullptr;
 App* g_theApp = nullptr;
+
+NamedStrings g_gameConfigBlackboard;
+float g_startTime = 0.0f;
 
 //--------------------------------------------------------------
 // Dev Console Static functions'

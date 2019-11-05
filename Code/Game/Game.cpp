@@ -11,7 +11,7 @@
 #include "Engine/Tools/Profiler.hpp"
 #include "ThirdParty/imGUI/imgui.h"
 #include "Game/Actor.hpp"
-
+#include "Game/SocialRole.hpp"
 
 Game::Game()
 {
@@ -23,6 +23,9 @@ Game::~Game()
 {
 	delete m_testActor;
 	m_testActor = nullptr;
+
+	delete m_dumbActor;
+	m_dumbActor = nullptr;
 }
 
 void Game::Startup()
@@ -154,9 +157,31 @@ void Game::TestImGui() const
 
 void Game::LoadGameAssets()
 {
-	std::string temp_char_name = std::string("Bob");
-	IntVec2 temp_char_coord = IntVec2(1, 5);
-
+	//load in actor texture
 	Actor::InitCharacterSheet(8, 8, 4096, 4096);
-	m_testActor = new Actor(this, temp_char_name, temp_char_coord);
+
+	
+	//load in actors
+	std::string test_name = std::string("Bob");
+	IntVec2 test_uv_coord = IntVec2(1, 5);
+	m_testActor = new Actor(this, test_name, test_uv_coord);
+
+	std::string dumb_name = std::string("Ed");
+	IntVec2 dumb_uv_coord = IntVec2(1, 3);
+	m_dumbActor = new Actor(this, dumb_name, dumb_uv_coord);
+
+	
+	//set social roles for each actors
+	SocialRole test_to_dumb_init = SocialRole::GenerateRandomSocialRoleInit();
+	test_to_dumb_init.m_origin = m_testActor;
+	test_to_dumb_init.m_towards = m_dumbActor;
+	m_testActor->AddRelationship(test_to_dumb_init);
+
+	for(int num_interactions = 0; num_interactions < DEMO_NUM_INTERACTIONS; ++num_interactions)
+	{
+		SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+		test_to_dumb_update.m_origin = m_testActor;
+		test_to_dumb_update.m_towards = m_dumbActor;
+		m_testActor->UpdateRelationship(test_to_dumb_update);
+	}
 }

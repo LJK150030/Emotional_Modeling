@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "ThirdParty/imGUI/imgui.h"
 
 enum EmotionType
 {
@@ -58,6 +59,7 @@ public:
 	Emotion operator+ (Emotion& emotion);
 
 public:
-	static std::string m_emotionName[NUM_EMOTIONS];
+	static const char* m_emotionName[NUM_EMOTIONS];
+	static ImColor m_emotionColor[NUM_EMOTIONS];
 	
 };

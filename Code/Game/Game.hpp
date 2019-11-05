@@ -41,6 +41,7 @@ private:
 	float m_camFOVDegrees	= 90.0f;
 
 	Actor* m_testActor = nullptr;
+	Actor* m_dumbActor = nullptr;
 
 private:
 	void TestImGui() const;

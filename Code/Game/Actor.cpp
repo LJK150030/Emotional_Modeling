@@ -2,9 +2,10 @@
 #include "Game/Personality.hpp"
 #include "Game/EmotionalState.hpp"
 #include "Game/Emotion.hpp"
+#include "Game/SocialRelation.hpp"
 #include "Engine/EngineCommon.hpp"
 #include "ThirdParty/imGUI/imgui.h"
-#include "Engine/Core/ErrorWarningAssert.hpp"
+#include "ThirdParty/imGUI/imgui_plot.cpp"
 #include "Engine/Renderer/RenderContext.hpp"
 
 STATIC ID3D11ShaderResourceView* Actor::s_characterSheet = nullptr;
@@ -41,12 +42,19 @@ Actor::Actor(Game* the_game, std::string& name, IntVec2& portrait_coord):
 	m_portraitUV = CalcUvPortraitCoord();
 
 	// temporary, expecting to read from XML file
-	m_personality = new Personality(0.7199829181, 0.8648539581, 0.6463935774, 0.8783411433, 0.3178747115);
+	m_personality = new Personality(
+		g_randomNumberGenerator.GetRandomFloatZeroToOne(), 
+		g_randomNumberGenerator.GetRandomFloatZeroToOne(), 
+		g_randomNumberGenerator.GetRandomFloatZeroToOne(), 
+		g_randomNumberGenerator.GetRandomFloatZeroToOne(), 
+		g_randomNumberGenerator.GetRandomFloatZeroToOne());
+	
 	m_emotionalState = new EmotionalState();
-
+	m_perceivedSocialRelation = new SocialRelation();
+	
 	m_emotionalState->AddEmotion(Emotion::GenerateRandomEmotionInit());
 
-	for(int num = 0; num < 10; ++num)
+	for(int num = 0; num < DEMO_NUM_INTERACTIONS; ++num)
 	{
 		Emotion temp_emotion = Emotion::GenerateRandomEmotion();
 		m_emotionalState->AddEmotion(m_emotionalState->GetCurrentEmotion() + temp_emotion);
@@ -97,6 +105,7 @@ void Actor::DrawProfile()
 	
 	DrawPersonalityInfo();
 	DrawEmotionalState();
+	DrawSocialRelations();
 	
 	ImGui::End();
 }
@@ -112,6 +121,18 @@ bool Actor::PopulateFromXml(std::string& file_dir)
 {
 	UNUSED(file_dir);
 	return false;
+}
+
+void Actor::AddRelationship(SocialRole& social_role)
+{
+	m_perceivedSocialRelation->AddSocialRole(social_role);
+}
+
+void Actor::UpdateRelationship(SocialRole& social_role)
+{
+	SocialRole current = m_perceivedSocialRelation->GetTheirRelationshipToMe(social_role.m_origin, social_role.m_towards);
+	current += social_role;
+	m_perceivedSocialRelation->AddSocialRole(current);
 }
 
 void Actor::Update(float delta_seconds)
@@ -159,16 +180,89 @@ void Actor::DrawPersonalityInfo()
 	}
 }
 
+float GetEmotionValFromHistory(const void* data, int idx)
+{
+	EmotionHistory* container = (EmotionHistory*) data;
+	return container->history[idx];
+}
+
 void Actor::DrawEmotionalState()
 {
 	if(ImGui::TreeNode("Emotional State"))
 	{
+		EmotionHistory* all_values[NUM_EMOTIONS];
+		
 		for(uint emo_idx = 0; emo_idx < NUM_EMOTIONS; ++emo_idx)
 		{
-			ImGui::PlotLines(Emotion::m_emotionName[emo_idx].c_str(), 
-				&m_emotionalState->m_individualEmotionHistory[emo_idx][0],
-				m_emotionalState->m_individualEmotionHistory[emo_idx].size(),
-				0,0, 0.0f, 1.0f);
+			all_values[emo_idx] = m_emotionalState->GetHistory(static_cast<EmotionType>(emo_idx), 0, DEMO_NUM_INTERACTIONS - 1);
+		}
+
+		ImVec2 graph_size(1200.0f, 300.0f);
+		
+		ImGui::PlotMultiLines(
+			"", 
+			NUM_EMOTIONS,
+			Emotion::m_emotionName, 
+			Emotion::m_emotionColor, 
+			GetEmotionValFromHistory, 
+			reinterpret_cast<const void* const*>(all_values), 
+			DEMO_NUM_INTERACTIONS, 
+			0.0f, 
+			1.0f, 
+			graph_size);
+
+		for(uint emo_idx = 0; emo_idx < NUM_EMOTIONS; ++emo_idx)
+		{
+			delete all_values[emo_idx];
+			all_values[emo_idx]  = nullptr;
+		}
+		
+		ImGui::TreePop();
+	}
+}
+
+float GetSocialValFromHistory(const void* data, int idx)
+{
+	SocialAspectHistory* container = (SocialAspectHistory*) data;
+	return container->history[idx];
+}
+
+void Actor::DrawSocialRelations()
+{
+	if(ImGui::TreeNode("Social Relationships"))
+	{
+		SocialAspectHistory* all_values[NUM_SOCIAL_ASPECT];
+		std::vector<std::pair<Actor*, Actor*>> connection_list = m_perceivedSocialRelation->GetConnectionList();
+
+		for(auto connect_it = connection_list.begin(); connect_it != connection_list.end(); ++connect_it)
+		{
+			for(uint soc_asp_idx = 0; soc_asp_idx < NUM_SOCIAL_ASPECT; ++soc_asp_idx)
+			{
+				all_values[soc_asp_idx] = m_perceivedSocialRelation->GetHistory(
+					connect_it->first, connect_it->second, 
+					static_cast<SocialAspect>(soc_asp_idx), 0, DEMO_NUM_INTERACTIONS - 1);
+			}
+		}
+		
+
+		ImVec2 graph_size(1200.0f, 300.0f);
+
+		ImGui::PlotMultiLines(
+			"", 
+			NUM_SOCIAL_ASPECT,
+			SocialRole::m_socialAspectName, 
+			SocialRole::m_socialAspectColor, 
+			GetSocialValFromHistory, 
+			reinterpret_cast<const void* const*>(all_values), 
+			DEMO_NUM_INTERACTIONS, 
+			0.0f, 
+			1.0f, 
+			graph_size);
+
+		for(uint soc_asp_idx = 0; soc_asp_idx < NUM_SOCIAL_ASPECT; ++soc_asp_idx)
+		{
+			delete all_values[soc_asp_idx];
+			all_values[soc_asp_idx]  = nullptr;
 		}
 
 		ImGui::TreePop();

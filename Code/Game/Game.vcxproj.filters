@@ -37,6 +37,12 @@
     <ClCompile Include="Emotion.cpp">
       <Filter>General</Filter>
     </ClCompile>
+    <ClCompile Include="SocialRelation.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="SocialRole.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp">
@@ -64,6 +70,12 @@
       <Filter>General</Filter>
     </ClInclude>
     <ClInclude Include="Emotion.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="SocialRelation.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="SocialRole.hpp">
       <Filter>General</Filter>
     </ClInclude>
   </ItemGroup>
