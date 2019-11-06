@@ -8,7 +8,7 @@ class EmotionalState;
 class SocialRelation;
 class SocialRole;
 
-class Actor: public Entity
+class Actor final : public Entity
 {
 public: // shared public variables
 	static ID3D11ShaderResourceView* s_characterSheet;

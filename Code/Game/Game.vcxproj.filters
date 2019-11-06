@@ -43,6 +43,12 @@
     <ClCompile Include="SocialRole.cpp">
       <Filter>General</Filter>
     </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="Action.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp">
@@ -76,6 +82,12 @@
       <Filter>General</Filter>
     </ClInclude>
     <ClInclude Include="SocialRole.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="Action.hpp">
       <Filter>General</Filter>
     </ClInclude>
   </ItemGroup>

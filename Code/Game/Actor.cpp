@@ -87,7 +87,7 @@ void Actor::DrawProfile()
 
 	ImGuiWindowFlags window_flags = 0;
 	window_flags |= ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoResize;
+	//window_flags |= ImGuiWindowFlags_NoResize;
 
 	const ImVec2 size = ImVec2(m_profileSize.x, m_profileSize.y);
 	const float alpha_override = -1.0f;

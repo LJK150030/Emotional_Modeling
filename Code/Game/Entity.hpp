@@ -13,9 +13,9 @@ public:
 	virtual ~Entity();
 	
 	virtual void Update(float delta_seconds)			= 0;
-	virtual void Render()							= 0;
+	virtual void Render()								= 0;
 	virtual void Die()									= 0;
-	virtual void DrawProfile()						= 0;
+	virtual void DrawProfile()							= 0;
 	virtual bool DestroyEntity()						= 0;
 	virtual bool PopulateFromXml(std::string& file_dir)	= 0;
 	

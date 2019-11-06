@@ -3,7 +3,7 @@
 #include "Engine/Core/EventSystem.hpp"
 
 #define MAX_HISTORY 64
-#define DEMO_NUM_INTERACTIONS 10
+#define DEMO_NUM_INTERACTIONS 24
 
 //--------------------------------------------------------
 // Forward declirations
