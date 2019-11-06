@@ -47,4 +47,6 @@ private:
 	void TestImGui() const;
 
 	void LoadGameAssets();
+
+	void EddPerformsRandomAction();
 };

@@ -54,11 +54,11 @@ Actor::Actor(Game* the_game, std::string& name, IntVec2& portrait_coord):
 	
 	m_emotionalState->AddEmotion(Emotion::GenerateRandomEmotionInit());
 
-	for(int num = 0; num < DEMO_NUM_INTERACTIONS; ++num)
-	{
-		Emotion temp_emotion = Emotion::GenerateRandomEmotion();
-		m_emotionalState->AddEmotion(m_emotionalState->GetCurrentEmotion() + temp_emotion);
-	}
+// 	for(int num = 0; num < DEMO_NUM_INTERACTIONS; ++num)
+// 	{
+// 		Emotion temp_emotion = Emotion::GenerateRandomEmotion();
+// 		m_emotionalState->AddEmotion(m_emotionalState->GetCurrentEmotion() + temp_emotion);
+// 	}
 }
 
 
@@ -135,6 +135,11 @@ void Actor::UpdateRelationship(SocialRole& social_role)
 	m_perceivedSocialRelation->AddSocialRole(current);
 }
 
+void Actor::ApplyEmotion(Emotion& emotion)
+{
+	m_emotionalState->AddEmotion(m_emotionalState->GetCurrentEmotion() + emotion);
+}
+
 void Actor::Update(float delta_seconds)
 {
 	UNUSED(delta_seconds);
@@ -194,7 +199,7 @@ void Actor::DrawEmotionalState()
 		
 		for(uint emo_idx = 0; emo_idx < NUM_EMOTIONS; ++emo_idx)
 		{
-			all_values[emo_idx] = m_emotionalState->GetHistory(static_cast<EmotionType>(emo_idx), 0, DEMO_NUM_INTERACTIONS - 1);
+			all_values[emo_idx] = m_emotionalState->GetHistory(static_cast<EmotionType>(emo_idx), 0, g_numActionsEdTook - 1 );
 		}
 
 		ImVec2 graph_size(1200.0f, 300.0f);
@@ -206,7 +211,7 @@ void Actor::DrawEmotionalState()
 			Emotion::m_emotionColor, 
 			GetEmotionValFromHistory, 
 			reinterpret_cast<const void* const*>(all_values), 
-			DEMO_NUM_INTERACTIONS, 
+			g_numActionsEdTook, 
 			MIN_UNIT_VALUE, 
 			MAX_UNIT_VALUE, 
 			graph_size);
@@ -242,7 +247,7 @@ void Actor::DrawSocialRelations()
 				{
 					all_values[soc_asp_idx] = m_perceivedSocialRelation->GetHistory(
 						connect_it->first, connect_it->second, 
-						static_cast<SocialAspect>(soc_asp_idx), 0, DEMO_NUM_INTERACTIONS - 1);
+						static_cast<SocialAspect>(soc_asp_idx), 0, g_numActionsEdTook - 1);
 				}
 
 				const ImVec2 graph_size(1200.0f, 300.0f);
@@ -254,7 +259,7 @@ void Actor::DrawSocialRelations()
 					SocialRole::m_socialAspectColor, 
 					GetSocialValFromHistory, 
 					reinterpret_cast<const void* const*>(all_values), 
-					DEMO_NUM_INTERACTIONS, 
+					g_numActionsEdTook, 
 					MIN_UNIT_VALUE, 
 					MAX_UNIT_VALUE, 
 					graph_size);

@@ -3,6 +3,7 @@
 #include "Engine/Math/Vec2.hpp"
 #include "Engine/Renderer/RenderContext.hpp"
 
+class Emotion;
 class Personality;
 class EmotionalState;
 class SocialRelation;
@@ -28,6 +29,8 @@ public: // member public functions
 	void AddRelationship(SocialRole& social_role);
 	void UpdateRelationship(SocialRole& social_role);
 
+	//debugging
+	void ApplyEmotion(Emotion& emotion);
 	
 public: // shared public functions
 	static void InitCharacterSheet( uint num_port_x, uint num_port_y, uint num_pixels_x, uint num_pixels_y );

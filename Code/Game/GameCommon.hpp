@@ -77,6 +77,7 @@ constexpr int F8_KEY = 119;
 constexpr int TILDE_KEY = 192;
 
 extern float g_startTime;
+extern int g_numActionsEdTook;
 //---------------------------------------------------------
 // global helper game functions
 

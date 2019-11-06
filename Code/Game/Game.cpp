@@ -12,6 +12,7 @@
 #include "ThirdParty/imGUI/imgui.h"
 #include "Game/Actor.hpp"
 #include "Game/SocialRole.hpp"
+#include "Emotion.hpp"
 
 Game::Game()
 {
@@ -109,6 +110,8 @@ bool Game::HandleKeyPressed(const unsigned char key_code)
 	{
 	case SPACE_BAR:
 		{
+			//Ed performs an action onto Bob
+			EddPerformsRandomAction();
 			return true;
 		}
 	default:
@@ -176,12 +179,17 @@ void Game::LoadGameAssets()
 	test_to_dumb_init.m_origin = m_testActor;
 	test_to_dumb_init.m_towards = m_dumbActor;
 	m_testActor->AddRelationship(test_to_dumb_init);
+}
 
-	for(int num_interactions = 0; num_interactions < DEMO_NUM_INTERACTIONS; ++num_interactions)
-	{
-		SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
-		test_to_dumb_update.m_origin = m_testActor;
-		test_to_dumb_update.m_towards = m_dumbActor;
-		m_testActor->UpdateRelationship(test_to_dumb_update);
-	}
+void Game::EddPerformsRandomAction()
+{
+	Emotion temp_emotion = Emotion::GenerateRandomEmotion();
+	m_testActor->ApplyEmotion(temp_emotion);
+
+	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+	test_to_dumb_update.m_origin = m_testActor;
+	test_to_dumb_update.m_towards = m_dumbActor;
+	m_testActor->UpdateRelationship(test_to_dumb_update);
+
+	g_numActionsEdTook++;
 }

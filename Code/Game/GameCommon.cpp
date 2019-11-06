@@ -25,6 +25,7 @@ App* g_theApp = nullptr;
 
 NamedStrings g_gameConfigBlackboard;
 float g_startTime = 0.0f;
+int g_numActionsEdTook = 1;
 
 //--------------------------------------------------------------
 // Dev Console Static functions'
