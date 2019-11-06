@@ -1,4 +1,5 @@
-#include "SocialRelation.hpp"
+#include "Game/SocialRelation.hpp"
+#include "Game/Actor.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
 
 SocialRelation::SocialRelation()
@@ -16,6 +17,8 @@ bool SocialRelation::DoIKnowThisActor(Actor* me, Actor* them) const
 	return result != m_socialMap.end();
 }
 
+
+// this creates a new SocialAspectHistory object, make sure to delete
 SocialAspectHistory* SocialRelation::GetHistory(Actor* me, Actor* them, SocialAspect social_aspect, int start_instance, int end_instance)
 {
 	int size = end_instance - start_instance + 1;
@@ -35,6 +38,7 @@ SocialAspectHistory* SocialRelation::GetHistory(Actor* me, Actor* them, SocialAs
 
 	return social_aspect_history; 
 }
+
 
 std::vector<std::pair<Actor*, Actor*>> SocialRelation::GetConnectionList()
 {
@@ -64,9 +68,10 @@ SocialRole SocialRelation::GetTheirRelationshipToMe(Actor* me, Actor* them)
 	return result->second.back();
 }
 
+
 void SocialRelation::AddSocialRole(SocialRole& role)
 {
-	if(DoIKnowThisActor(role.GetConnection().first, role.GetConnection().second))
+	if(DoIKnowThisActor(role.m_origin, role.m_towards))
 	{
 		m_socialMap[role.GetConnection()].emplace_back(role);
 	}

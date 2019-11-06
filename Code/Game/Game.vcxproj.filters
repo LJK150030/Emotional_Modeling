@@ -49,6 +49,18 @@
     <ClCompile Include="Action.cpp">
       <Filter>General</Filter>
     </ClCompile>
+    <ClCompile Include="Attitude.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="Praise.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="AttitudeRelation.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="PraiseRelation.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp">
@@ -88,6 +100,18 @@
       <Filter>General</Filter>
     </ClInclude>
     <ClInclude Include="Action.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="Attitude.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="Praise.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="AttitudeRelation.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="PraiseRelation.hpp">
       <Filter>General</Filter>
     </ClInclude>
   </ItemGroup>

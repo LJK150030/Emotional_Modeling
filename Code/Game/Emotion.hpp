@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "Game/GameCommon.hpp"
 #include "ThirdParty/imGUI/imgui.h"
 
 enum EmotionType
@@ -44,7 +45,7 @@ enum EmotionType
 class Emotion
 {
 public:
-	float m_emotions[NUM_EMOTIONS];
+	float m_emotions[NUM_EMOTIONS] = {MIN_UNIT_VALUE};
 
 public:
 	Emotion();
@@ -57,6 +58,8 @@ public:
 	float& operator[] (int idx); 
 	float& operator[] (EmotionType idx);
 	Emotion operator+ (Emotion& emotion);
+	void operator+=(Emotion& emotion); 
+
 
 public:
 	static const char* m_emotionName[NUM_EMOTIONS];

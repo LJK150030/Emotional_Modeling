@@ -169,11 +169,11 @@ void Actor::DrawPersonalityInfo()
 	{
 		// Various
 		ImGui::PushItemWidth(100.0f);
-		ImGui::SliderFloat(":O", &(*m_personality)[0], 0.0f, 1.0f); ImGui::SameLine();
-		ImGui::SliderFloat(":C", &(*m_personality)[1], 0.0f, 1.0f); ImGui::SameLine();
-		ImGui::SliderFloat(":E", &(*m_personality)[2], 0.0f, 1.0f); ImGui::SameLine();
-		ImGui::SliderFloat(":A", &(*m_personality)[3], 0.0f, 1.0f); ImGui::SameLine();
-		ImGui::SliderFloat(":N", &(*m_personality)[4], 0.0f, 1.0f);
+		ImGui::SliderFloat(":O", &(*m_personality)[PERSONALITY_OPENNESS], MIN_UNIT_VALUE, MAX_UNIT_VALUE); ImGui::SameLine();
+		ImGui::SliderFloat(":C", &(*m_personality)[PERSONALITY_CONSCIENTIOUSNESS], MIN_UNIT_VALUE, MAX_UNIT_VALUE); ImGui::SameLine();
+		ImGui::SliderFloat(":E", &(*m_personality)[PERSONALITY_EXTROVERSION], MIN_UNIT_VALUE, MAX_UNIT_VALUE); ImGui::SameLine();
+		ImGui::SliderFloat(":A", &(*m_personality)[PERSONALITY_AGREEABLENESS], MIN_UNIT_VALUE, MAX_UNIT_VALUE); ImGui::SameLine();
+		ImGui::SliderFloat(":N", &(*m_personality)[PERSONALITY_NEUROTICISM], MIN_UNIT_VALUE, MAX_UNIT_VALUE);
 		ImGui::PopItemWidth();
 
 		ImGui::TreePop();
@@ -207,8 +207,8 @@ void Actor::DrawEmotionalState()
 			GetEmotionValFromHistory, 
 			reinterpret_cast<const void* const*>(all_values), 
 			DEMO_NUM_INTERACTIONS, 
-			0.0f, 
-			1.0f, 
+			MIN_UNIT_VALUE, 
+			MAX_UNIT_VALUE, 
 			graph_size);
 
 		for(uint emo_idx = 0; emo_idx < NUM_EMOTIONS; ++emo_idx)
@@ -236,33 +236,36 @@ void Actor::DrawSocialRelations()
 
 		for(auto connect_it = connection_list.begin(); connect_it != connection_list.end(); ++connect_it)
 		{
-			for(uint soc_asp_idx = 0; soc_asp_idx < NUM_SOCIAL_ASPECT; ++soc_asp_idx)
+			if (ImGui::TreeNode(connect_it->second->m_name.c_str()))
 			{
-				all_values[soc_asp_idx] = m_perceivedSocialRelation->GetHistory(
-					connect_it->first, connect_it->second, 
-					static_cast<SocialAspect>(soc_asp_idx), 0, DEMO_NUM_INTERACTIONS - 1);
+				for(uint soc_asp_idx = 0; soc_asp_idx < NUM_SOCIAL_ASPECT; ++soc_asp_idx)
+				{
+					all_values[soc_asp_idx] = m_perceivedSocialRelation->GetHistory(
+						connect_it->first, connect_it->second, 
+						static_cast<SocialAspect>(soc_asp_idx), 0, DEMO_NUM_INTERACTIONS - 1);
+				}
+
+				const ImVec2 graph_size(1200.0f, 300.0f);
+
+				ImGui::PlotMultiLines(
+					"", 
+					NUM_SOCIAL_ASPECT,
+					SocialRole::m_socialAspectName, 
+					SocialRole::m_socialAspectColor, 
+					GetSocialValFromHistory, 
+					reinterpret_cast<const void* const*>(all_values), 
+					DEMO_NUM_INTERACTIONS, 
+					MIN_UNIT_VALUE, 
+					MAX_UNIT_VALUE, 
+					graph_size);
+
+				for(uint soc_asp_idx = 0; soc_asp_idx < NUM_SOCIAL_ASPECT; ++soc_asp_idx)
+				{
+					delete all_values[soc_asp_idx];
+					all_values[soc_asp_idx]  = nullptr;
+				}
+				ImGui::TreePop();
 			}
-		}
-		
-
-		ImVec2 graph_size(1200.0f, 300.0f);
-
-		ImGui::PlotMultiLines(
-			"", 
-			NUM_SOCIAL_ASPECT,
-			SocialRole::m_socialAspectName, 
-			SocialRole::m_socialAspectColor, 
-			GetSocialValFromHistory, 
-			reinterpret_cast<const void* const*>(all_values), 
-			DEMO_NUM_INTERACTIONS, 
-			0.0f, 
-			1.0f, 
-			graph_size);
-
-		for(uint soc_asp_idx = 0; soc_asp_idx < NUM_SOCIAL_ASPECT; ++soc_asp_idx)
-		{
-			delete all_values[soc_asp_idx];
-			all_values[soc_asp_idx]  = nullptr;
 		}
 
 		ImGui::TreePop();

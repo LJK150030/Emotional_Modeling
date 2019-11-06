@@ -1,5 +1,4 @@
 #include "SocialRole.hpp"
-#include "Engine/EngineCommon.hpp"
 #include "Engine/Math/MathUtils.hpp"
 
 STATIC float SocialRole::s_stranger[NUM_SOCIAL_ASPECT] = {0.1f, 0.1f, 0.1f, 0.0f};
@@ -44,20 +43,20 @@ STATIC SocialRole SocialRole::GenerateRandomSocialRole()
 		}
 		else
 		{
-			new_social_role[sol_asp_idx] = 0.0f;
+			new_social_role[sol_asp_idx] = MIN_UNIT_VALUE;
 		}
 	}
 
 	return new_social_role;
 }
 
-SocialRole::SocialRole() : m_relationshipMakeup{0.0f} {}
+SocialRole::SocialRole() = default;
 
 
 SocialRole::SocialRole(Actor* origin, Actor* towards, float init_liking, 
 	float init_dominance, float init_solidarity, float init_familiarity):
-	m_origin(origin), m_towards(towards), m_relationshipMakeup{init_liking,
-	init_dominance, init_solidarity, init_familiarity} { }
+	m_relationshipMakeup{init_liking, init_dominance, init_solidarity, init_familiarity},
+	m_origin(origin), m_towards(towards) { }
 
 SocialRole::SocialRole(Actor* origin, Actor* towards, float social_role_vector[NUM_SOCIAL_ASPECT]):
 	m_origin(origin), m_towards(towards)
@@ -67,7 +66,7 @@ SocialRole::SocialRole(Actor* origin, Actor* towards, float social_role_vector[N
 		m_relationshipMakeup[soc_asp] = social_role_vector[soc_asp];
 		m_relationshipMakeup[soc_asp] = ClampFloat(
 			m_relationshipMakeup[soc_asp],
-			0.0f, 1.0f);
+			MIN_UNIT_VALUE, MAX_UNIT_VALUE);
 	}
 }
 
@@ -86,7 +85,8 @@ SocialRole SocialRole::operator+(SocialRole& social_role_vec) const
 	for(uint soc_asp = 0; soc_asp < NUM_SOCIAL_ASPECT; ++soc_asp)
 	{
 		new_role[soc_asp] = this->m_relationshipMakeup[soc_asp] + social_role_vec[soc_asp];
-		new_role[soc_asp] = ClampFloat(new_role[soc_asp], 0.0f, 1.0f);
+		new_role[soc_asp] = ClampFloat(new_role[soc_asp], 
+			MIN_UNIT_VALUE, MAX_UNIT_VALUE);
 	}
 
 	return new_role;
@@ -99,18 +99,19 @@ void SocialRole::operator+=(SocialRole& social_role_vec)
 		m_relationshipMakeup[soc_asp] += social_role_vec[soc_asp];
 		m_relationshipMakeup[soc_asp] = ClampFloat(
 			m_relationshipMakeup[soc_asp],
-			0.0f, 1.0f);
+			MIN_UNIT_VALUE, MAX_UNIT_VALUE);
 	}
 }
 
 bool SocialRole::operator==(SocialRole& social_role_vec) const
 {
-	return (
-		m_relationshipMakeup[SOCIAL_ASPECT_LIKING] == social_role_vec.m_relationshipMakeup[SOCIAL_ASPECT_LIKING] &&
-		m_relationshipMakeup[SOCIAL_ASPECT_DOMINANCE] == social_role_vec.m_relationshipMakeup[SOCIAL_ASPECT_DOMINANCE] &&
-		m_relationshipMakeup[SOCIAL_ASPECT_SOLIDARITY] == social_role_vec.m_relationshipMakeup[SOCIAL_ASPECT_SOLIDARITY] &&
-		m_relationshipMakeup[SOCIAL_ASPECT_FAMILIARITY] == social_role_vec.m_relationshipMakeup[SOCIAL_ASPECT_FAMILIARITY]
-		);
+	for(uint soc_asp = 0; soc_asp < NUM_SOCIAL_ASPECT; ++soc_asp)
+	{
+		if(m_relationshipMakeup[soc_asp] != social_role_vec.m_relationshipMakeup[soc_asp])
+			return false;
+	}
+
+	return true;
 }
 
 float& SocialRole::operator[](int idx)

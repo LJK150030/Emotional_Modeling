@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include "Game/GameCommon.hpp"
 
 enum PersonalityIdex
 {
@@ -15,16 +15,11 @@ enum PersonalityIdex
 class Personality
 {
 public:
+	float m_personality[NUM_PERSONALITY_VALS] = {MIN_UNIT_VALUE};
+	
+public:
 	Personality(float o, float c, float e, float a, float n);
 	~Personality();
 
-	std::vector<float> GetPersonality();
-	float GetOpenness();
-	float GetConscientiousness();
-	float GetExtroversion();
-	float GetAgreeableness();
-	float GetNeuroticism();
 	float &operator[] (int idx); 
-private:
-	std::vector<float> m_personality;
 };

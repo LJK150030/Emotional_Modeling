@@ -1,6 +1,7 @@
 #include "Game/Emotion.hpp"
 #include "Engine/EngineCommon.hpp"
 #include "Engine/Math/MathUtils.hpp"
+#include "Game/GameCommon.hpp"
 
 STATIC const char* Emotion::m_emotionName[NUM_EMOTIONS] = {"Positive",
 	"Negative", "Pleased", "Displeased", "Hope", "Fear", "Joy", "Distress",
@@ -47,7 +48,7 @@ STATIC Emotion Emotion::GenerateRandomEmotion()
 		}
 		else
 		{
-			new_emotion[emo_idx] = 0.0f;
+			new_emotion[emo_idx] = MIN_UNIT_VALUE;
 		}
 	}
 
@@ -55,15 +56,10 @@ STATIC Emotion Emotion::GenerateRandomEmotion()
 }
 
 
-Emotion::Emotion(): m_emotions{0.0f}
-{
-	
-}
+Emotion::Emotion() = default;
 
 
-Emotion::~Emotion()
-{
-}
+Emotion::~Emotion() = default;
 
 
 float& Emotion::operator[](const int idx)
@@ -85,8 +81,19 @@ Emotion Emotion::operator+(Emotion& emotion)
 	for(uint emo_idx = 0; emo_idx < NUM_EMOTIONS; ++emo_idx)
 	{
 		new_emotion[emo_idx] = this->m_emotions[emo_idx] + emotion[emo_idx];
-		new_emotion[emo_idx] = ClampFloat(new_emotion[emo_idx], 0.0f, 1.0f);
+		new_emotion[emo_idx] = ClampFloat(new_emotion[emo_idx], MIN_UNIT_VALUE, MAX_UNIT_VALUE);
 	}
 
 	return new_emotion;
+}
+
+void Emotion::operator+=(Emotion& emotion)
+{
+	for(uint emo_asp = 0; emo_asp < NUM_EMOTIONS; ++emo_asp)
+	{
+		m_emotions[emo_asp] += emotion[emo_asp];
+		m_emotions[emo_asp] = ClampFloat(
+			m_emotions[emo_asp],
+			MIN_UNIT_VALUE, MAX_UNIT_VALUE);
+	}
 }

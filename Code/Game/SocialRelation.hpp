@@ -1,11 +1,13 @@
 #pragma once
-#include "Actor.hpp"
-#include "SocialRole.hpp"
-#include "GameCommon.hpp"
+#include "Game/SocialRole.hpp"
+#include "Game/GameCommon.hpp"
 #include <map>
 
-struct SocialAspectHistory { 
-	float history[MAX_HISTORY]; 
+class Actor;
+
+struct SocialAspectHistory
+{ 
+	float history[MAX_HISTORY] = {MIN_UNIT_VALUE}; 
 };
 
 class SocialRelation

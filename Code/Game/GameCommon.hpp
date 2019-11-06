@@ -3,6 +3,8 @@
 #include "Engine/Core/EventSystem.hpp"
 
 #define MAX_HISTORY 64
+#define MIN_UNIT_VALUE 0.0f
+#define MAX_UNIT_VALUE 1.0f
 #define DEMO_NUM_INTERACTIONS 24
 
 //--------------------------------------------------------

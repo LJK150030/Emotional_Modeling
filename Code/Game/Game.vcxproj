@@ -195,6 +195,8 @@
     <ClCompile Include="Action.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Attitude.cpp" />
+    <ClCompile Include="AttitudeRelation.cpp" />
     <ClCompile Include="Emotion.cpp" />
     <ClCompile Include="EmotionalState.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -208,6 +210,8 @@
     </ClCompile>
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Personality.cpp" />
+    <ClCompile Include="Praise.cpp" />
+    <ClCompile Include="PraiseRelation.cpp" />
     <ClCompile Include="SocialRelation.cpp" />
     <ClCompile Include="SocialRole.cpp" />
   </ItemGroup>
@@ -215,6 +219,8 @@
     <ClInclude Include="Action.hpp" />
     <ClInclude Include="Actor.hpp" />
     <ClInclude Include="App.hpp" />
+    <ClInclude Include="Attitude.hpp" />
+    <ClInclude Include="AttitudeRelation.hpp" />
     <ClInclude Include="Emotion.hpp" />
     <ClInclude Include="EmotionalState.hpp" />
     <ClInclude Include="EngineBuildPreferences.hpp" />
@@ -223,6 +229,8 @@
     <ClInclude Include="GameCommon.hpp" />
     <ClInclude Include="Object.hpp" />
     <ClInclude Include="Personality.hpp" />
+    <ClInclude Include="Praise.hpp" />
+    <ClInclude Include="PraiseRelation.hpp" />
     <ClInclude Include="SocialRelation.hpp" />
     <ClInclude Include="SocialRole.hpp" />
   </ItemGroup>

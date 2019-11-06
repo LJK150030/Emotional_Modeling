@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/Math/Vec4.hpp"
+#include "Game/GameCommon.hpp"
 #include "ThirdParty/imGUI/imgui.h"
 #include <utility>
 
@@ -19,7 +20,7 @@ enum SocialAspect
 class SocialRole
 {
 public:
-	float m_relationshipMakeup[NUM_SOCIAL_ASPECT];
+	float m_relationshipMakeup[NUM_SOCIAL_ASPECT] = {MIN_UNIT_VALUE};
 	Actor* m_origin = nullptr;
 	Actor* m_towards = nullptr;
 
