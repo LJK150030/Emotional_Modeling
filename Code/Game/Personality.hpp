@@ -21,5 +21,7 @@ public:
 	Personality(float o, float c, float e, float a, float n);
 	~Personality();
 
+	void DrawImguiValues();
+
 	float &operator[] (int idx); 
 };

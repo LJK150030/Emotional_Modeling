@@ -1,5 +1,7 @@
 #include "Game/AttitudeRelation.hpp"
+#include "Game/Object.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
+#include "ThirdParty/imGUI/imgui_plot.h"
 
 
 AttitudeRelation::AttitudeRelation()
@@ -83,4 +85,55 @@ std::vector<std::pair<Actor*, Object*>> AttitudeRelation::GetConnectionList()
 		connection_list.push_back(attitude_map_it->first);
 	}
 	return connection_list;
+}
+
+float GetAttitudeValFromHistory(const void* data, int idx)
+{
+	AttitudeAspectHistory* container = (AttitudeAspectHistory*) data;
+	return container->history[idx];
+}
+
+void AttitudeRelation::DrawImguiGraph()
+{
+	if(ImGui::TreeNode("Attitude Relationships"))
+	{
+		AttitudeAspectHistory* all_values[NUM_ATTITUDE_ASPECTS];
+		std::vector<std::pair<Actor*, Object*>> connection_list = GetConnectionList();
+
+		for(auto connect_it = connection_list.begin(); connect_it != connection_list.end(); ++connect_it)
+		{
+			if (ImGui::TreeNode(connect_it->second->GetName().c_str()))
+			{
+				for(uint att_asp_idx = 0; att_asp_idx < NUM_SOCIAL_ASPECT; ++att_asp_idx)
+				{
+					all_values[att_asp_idx] = GetHistory(
+						connect_it->first, connect_it->second, 
+						static_cast<AttitudeAspect>(att_asp_idx), 0, g_numActionsEdTook - 1);
+				}
+
+				const ImVec2 graph_size(1200.0f, 300.0f);
+
+				ImGui::PlotMultiLines(
+					"", 
+					NUM_ATTITUDE_ASPECTS,
+					Attitude::m_attitudeAspectName, 
+					Attitude::m_attitudeAspectColor, 
+					GetAttitudeValFromHistory, 
+					reinterpret_cast<const void* const*>(all_values), 
+					g_numActionsEdTook, 
+					MIN_UNIT_VALUE, 
+					MAX_UNIT_VALUE, 
+					graph_size);
+
+				for(uint att_asp_idx = 0; att_asp_idx < NUM_ATTITUDE_ASPECTS; ++att_asp_idx)
+				{
+					delete all_values[att_asp_idx];
+					all_values[att_asp_idx]  = nullptr;
+				}
+				ImGui::TreePop();
+			}
+		}
+
+		ImGui::TreePop();
+	}
 }

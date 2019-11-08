@@ -8,6 +8,10 @@ class Personality;
 class EmotionalState;
 class SocialRelation;
 class SocialRole;
+class AttitudeRelation;
+class Attitude;
+class PraiseRelation;
+class Praise;
 
 class Actor final : public Entity
 {
@@ -26,11 +30,11 @@ public: // member public functions
 	bool DestroyEntity() override;
 	bool PopulateFromXml(std::string& file_dir) override;
 
-	void AddRelationship(SocialRole& social_role);
-	void UpdateRelationship(SocialRole& social_role);
 
 	//debugging
 	void ApplyEmotion(Emotion& emotion);
+	void AddRelationship(SocialRole& social_role);
+	void UpdateRelationship(SocialRole& social_role);
 	
 public: // shared public functions
 	static void InitCharacterSheet( uint num_port_x, uint num_port_y, uint num_pixels_x, uint num_pixels_y );
@@ -40,9 +44,6 @@ public: // shared public functions
 private: // member private functions
 	Vec4	CalcUvPortraitCoord();
 	void	DrawPortrait();
-	void	DrawPersonalityInfo();
-	void	DrawEmotionalState();
-	void	DrawSocialRelations();	
 
 	
 private: // member private variables
@@ -50,6 +51,8 @@ private: // member private variables
 	Personality* m_personality;
 	EmotionalState* m_emotionalState;
 	SocialRelation* m_perceivedSocialRelation;
+	AttitudeRelation* m_attitudeRelation;
+	PraiseRelation* m_praiseRelation;
 	
 	//profile data
 	bool m_displayVerboseProfile = true;

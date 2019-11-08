@@ -5,6 +5,12 @@
 STATIC const char* Attitude::m_attitudeAspectName[NUM_ATTITUDE_ASPECTS] = {"Attribute",
 	"Familiarity"};
 
+
+STATIC ImColor Attitude::m_attitudeAspectColor[NUM_ATTITUDE_ASPECTS] ={
+	ImColor(0, 255, 0, 255),
+	ImColor(89, 128, 89, 255)
+};
+
 STATIC float Attitude::s_unfamiliarObject[NUM_ATTITUDE_ASPECTS] = { 0.5f, 0.0f };
 
 Attitude::Attitude() = default;

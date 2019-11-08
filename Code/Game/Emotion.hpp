@@ -54,6 +54,7 @@ public:
 	//debug functions
 	static Emotion GenerateRandomEmotionInit();
 	static Emotion GenerateRandomEmotion();
+	static Emotion GenerateDecayEmotion();
 
 	float& operator[] (int idx); 
 	float& operator[] (EmotionType idx);
@@ -64,5 +65,4 @@ public:
 public:
 	static const char* m_emotionName[NUM_EMOTIONS];
 	static ImColor m_emotionColor[NUM_EMOTIONS];
-	
 };

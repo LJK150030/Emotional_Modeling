@@ -28,5 +28,8 @@ public:
 	SocialAspectHistory* GetHistory(Actor* me, Actor* them, SocialAspect social_aspect, int start_instance, int end_instance);
 	std::vector<std::pair<Actor*, Actor*>> GetConnectionList();
 
+	//debug helpers
+	void DrawImguiGraph();
+	void LogSocialRelation();
 };
 

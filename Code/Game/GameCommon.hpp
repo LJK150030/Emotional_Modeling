@@ -6,6 +6,7 @@
 #define MIN_UNIT_VALUE 0.0f
 #define MAX_UNIT_VALUE 1.0f
 #define DEMO_NUM_INTERACTIONS 24
+#define EMOTION_DECAY_VALUE -0.01f
 
 //--------------------------------------------------------
 // Forward declirations

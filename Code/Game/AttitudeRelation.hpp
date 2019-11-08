@@ -30,5 +30,7 @@ public:
 	AttitudeAspectHistory* GetHistory(Actor* me, Object* thing, AttitudeAspect attitude_aspect, int start_instance, int end_instance);
 	std::vector<std::pair<Actor*, Object*>> GetConnectionList();
 
+	//debug helpers
+	void DrawImguiGraph();
 };
 

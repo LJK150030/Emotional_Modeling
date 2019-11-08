@@ -55,6 +55,18 @@ STATIC Emotion Emotion::GenerateRandomEmotion()
 	return new_emotion;
 }
 
+Emotion Emotion::GenerateDecayEmotion()
+{
+	Emotion decay_emotion;
+
+	for(uint emo_idx = 0; emo_idx < NUM_EMOTIONS; ++emo_idx)
+	{
+		decay_emotion[emo_idx] = EMOTION_DECAY_VALUE;
+	}
+
+	return decay_emotion;
+}
+
 
 Emotion::Emotion() = default;
 

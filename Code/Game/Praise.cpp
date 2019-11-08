@@ -3,6 +3,9 @@
 #include "Engine/Math/MathUtils.hpp"
 
 STATIC const char* Praise::m_praiseAspectName[NUM_PRAISE_ASPECTS] = {"Attribute"};
+STATIC ImColor Praise::m_praiseAspectColor[NUM_PRAISE_ASPECTS] ={
+	ImColor(0, 255, 255, 255)
+};
 STATIC float Praise::s_unfamiliarAction[NUM_PRAISE_ASPECTS] = { 0.0f };
 
 Praise::Praise() = default;

@@ -1,5 +1,6 @@
 #pragma once
 #include "Game/GameCommon.hpp"
+#include "ThirdParty/imGUI/imgui.h"
 
 class Actor;
 class Object;
@@ -23,6 +24,7 @@ public:
 
 public:
 	static const char* m_attitudeAspectName[NUM_ATTITUDE_ASPECTS];
+	static ImColor m_attitudeAspectColor[NUM_ATTITUDE_ASPECTS];
 	static float s_unfamiliarObject[NUM_ATTITUDE_ASPECTS];
 
 public:

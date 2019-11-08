@@ -1,8 +1,6 @@
 #pragma once
 #include <vector>
 #include "Game/Emotion.hpp"
-#include "Engine/EngineCommon.hpp"
-#include "Engine/Core/ErrorWarningAssert.hpp"
 #include "GameCommon.hpp"
 
 struct EmotionHistory { 
@@ -22,6 +20,9 @@ public:
 	~EmotionalState();
 	Emotion& GetCurrentEmotion();
 	void AddEmotion(Emotion emo);
+
+	void DrawImguiGraph();
+	void LogEmotionalState();
 };
 
 

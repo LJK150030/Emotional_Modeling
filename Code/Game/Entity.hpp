@@ -22,6 +22,8 @@ public:
 	Game*	GetGame()		const;
 	bool	IsDead()		const;
 	bool	IsGarbage()		const;
+
+	std::string GetName()	const;
 	
 protected:
 	Game*			m_game			= nullptr;

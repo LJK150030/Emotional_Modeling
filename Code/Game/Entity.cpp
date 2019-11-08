@@ -26,3 +26,8 @@ bool Entity::IsGarbage() const
 	return m_isGarbage;
 }
 
+std::string Entity::GetName() const
+{
+	return m_name;
+}
+

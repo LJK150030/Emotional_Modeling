@@ -1,5 +1,6 @@
 #pragma once
 #include "Game/GameCommon.hpp"
+#include "ThirdParty/imGUI/imgui.h"
 
 
 class Actor;
@@ -22,6 +23,7 @@ public:
 
 public:
 	static const char* m_praiseAspectName[NUM_PRAISE_ASPECTS];
+	static ImColor m_praiseAspectColor[NUM_PRAISE_ASPECTS];
 	static float s_unfamiliarAction[NUM_PRAISE_ASPECTS];
 
 public:

@@ -2,6 +2,8 @@
 #include "Game/Actor.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
 
+#include "ThirdParty/imGUI/imgui_plot.h"
+
 SocialRelation::SocialRelation()
 {
 	m_socialMap = std::map<std::pair<Actor*, Actor*>, std::vector<SocialRole>>();
@@ -47,6 +49,59 @@ std::vector<std::pair<Actor*, Actor*>> SocialRelation::GetConnectionList()
 		connection_list.push_back(social_map_it->first);
 	}
 	return connection_list;
+}
+
+
+float GetSocialValFromHistory(const void* data, int idx)
+{
+	SocialAspectHistory* container = (SocialAspectHistory*) data;
+	return container->history[idx];
+}
+
+
+void SocialRelation::DrawImguiGraph()
+{
+	if(ImGui::TreeNode("Social Relationships"))
+	{
+		SocialAspectHistory* all_values[NUM_SOCIAL_ASPECT];
+		std::vector<std::pair<Actor*, Actor*>> connection_list = GetConnectionList();
+
+		for(auto connect_it = connection_list.begin(); connect_it != connection_list.end(); ++connect_it)
+		{
+			if (ImGui::TreeNode(connect_it->second->GetName().c_str()))
+			{
+				for(uint soc_asp_idx = 0; soc_asp_idx < NUM_SOCIAL_ASPECT; ++soc_asp_idx)
+				{
+					all_values[soc_asp_idx] = GetHistory(
+						connect_it->first, connect_it->second, 
+						static_cast<SocialAspect>(soc_asp_idx), 0, g_numActionsEdTook - 1);
+				}
+
+				const ImVec2 graph_size(1200.0f, 300.0f);
+
+				ImGui::PlotMultiLines(
+					"", 
+					NUM_SOCIAL_ASPECT,
+					SocialRole::m_socialAspectName, 
+					SocialRole::m_socialAspectColor, 
+					GetSocialValFromHistory, 
+					reinterpret_cast<const void* const*>(all_values), 
+					g_numActionsEdTook, 
+					MIN_UNIT_VALUE, 
+					MAX_UNIT_VALUE, 
+					graph_size);
+
+				for(uint soc_asp_idx = 0; soc_asp_idx < NUM_SOCIAL_ASPECT; ++soc_asp_idx)
+				{
+					delete all_values[soc_asp_idx];
+					all_values[soc_asp_idx]  = nullptr;
+				}
+				ImGui::TreePop();
+			}
+		}
+
+		ImGui::TreePop();
+	}
 }
 
 

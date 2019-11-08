@@ -1,5 +1,7 @@
 #include "Game/PraiseRelation.hpp"
+#include "Game/Action.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
+#include "ThirdParty/imGUI/imgui_plot.h"
 
 
 PraiseRelation::PraiseRelation()
@@ -83,4 +85,55 @@ std::vector<std::pair<Actor*, Action*>> PraiseRelation::GetConnectionList()
 		connection_list.push_back(praise_map_it->first);
 	}
 	return connection_list;
+}
+
+float GetPraiseValFromHistory(const void* data, int idx)
+{
+	PraiseAspectHistory* container = (PraiseAspectHistory*) data;
+	return container->history[idx];
+}
+
+void PraiseRelation::DrawImguiGraph()
+{
+	if(ImGui::TreeNode("Praise Relationships"))
+	{
+		PraiseAspectHistory* all_values[NUM_PRAISE_ASPECTS];
+		std::vector<std::pair<Actor*, Action*>> connection_list = GetConnectionList();
+
+		for(auto connect_it = connection_list.begin(); connect_it != connection_list.end(); ++connect_it)
+		{
+			if (ImGui::TreeNode(connect_it->second->GetName().c_str()))
+			{
+				for(uint pra_asp_idx = 0; pra_asp_idx < NUM_SOCIAL_ASPECT; ++pra_asp_idx)
+				{
+					all_values[pra_asp_idx] = GetHistory(
+						connect_it->first, connect_it->second, 
+						static_cast<PraiseAspect>(pra_asp_idx), 0, g_numActionsEdTook - 1);
+				}
+
+				const ImVec2 graph_size(1200.0f, 300.0f);
+
+				ImGui::PlotMultiLines(
+					"", 
+					NUM_PRAISE_ASPECTS,
+					Praise::m_praiseAspectName, 
+					Praise::m_praiseAspectColor, 
+					GetPraiseValFromHistory, 
+					reinterpret_cast<const void* const*>(all_values), 
+					g_numActionsEdTook, 
+					MIN_UNIT_VALUE, 
+					MAX_UNIT_VALUE, 
+					graph_size);
+
+				for(uint pra_asp_idx = 0; pra_asp_idx < NUM_PRAISE_ASPECTS; ++pra_asp_idx)
+				{
+					delete all_values[pra_asp_idx];
+					all_values[pra_asp_idx]  = nullptr;
+				}
+				ImGui::TreePop();
+			}
+		}
+
+		ImGui::TreePop();
+	}
 }

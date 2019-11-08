@@ -30,9 +30,8 @@ Game::~Game()
 }
 
 void Game::Startup()
-{	
-	LogHook(&OutputLog);
-
+{
+	
 	m_gameCamera = new Camera();
 	m_gameCamera->SetColorTarget(nullptr); // when binding, if nullptr, use the backbuffer
 	m_gameCamera->SetOrthoView(Vec2::ZERO, 
@@ -66,7 +65,7 @@ void Game::Update(const double delta_seconds)
 }
 
 
-void Game::UpdateImGUI() const
+void Game::UpdateImGUI()
 {
 
 	// Feed inputs to dear imgui, start new frame
@@ -76,8 +75,8 @@ void Game::UpdateImGUI() const
 	//TestImGui();
 
 	m_testActor->Render();
+	UpdateEdsActions();
 
-	
 	// Render dear imgui into screen
 	g_imGUI->Render();
 	g_imGUI->EndFrame();
@@ -192,4 +191,168 @@ void Game::EddPerformsRandomAction()
 	m_testActor->UpdateRelationship(test_to_dumb_update);
 
 	g_numActionsEdTook++;
+}
+
+void Game::EddPerformsAHopefulAction()
+{
+	Emotion hopeful_emotion;
+
+	hopeful_emotion = Emotion::GenerateDecayEmotion();
+	hopeful_emotion[EMOTION_HOPE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	hopeful_emotion[EMOTION_PLEASED] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	hopeful_emotion[EMOTION_POSITIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	m_testActor->ApplyEmotion(hopeful_emotion);
+
+	//TODO: need to update accordingly
+	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+	test_to_dumb_update.m_origin = m_testActor;
+	test_to_dumb_update.m_towards = m_dumbActor;
+	m_testActor->UpdateRelationship(test_to_dumb_update);
+
+	g_numActionsEdTook++;
+
+}
+
+void Game::EddPerformsAFearfulAction()
+{
+	Emotion fearful_emotion;
+
+	fearful_emotion = Emotion::GenerateDecayEmotion();
+	fearful_emotion[EMOTION_FEAR] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	fearful_emotion[EMOTION_DISPLEASED] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	fearful_emotion[EMOTION_NEGATIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	m_testActor->ApplyEmotion(fearful_emotion);
+
+	//TODO: need to update accordingly
+	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+	test_to_dumb_update.m_origin = m_testActor;
+	test_to_dumb_update.m_towards = m_dumbActor;
+	m_testActor->UpdateRelationship(test_to_dumb_update);
+
+	g_numActionsEdTook++;
+
+}
+
+void Game::EddPerformsALovableAction()
+{
+	Emotion fearful_emotion;
+
+	fearful_emotion = Emotion::GenerateDecayEmotion();
+	fearful_emotion[EMOTION_LOVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	fearful_emotion[EMOTION_LIKING] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	fearful_emotion[EMOTION_POSITIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	m_testActor->ApplyEmotion(fearful_emotion);
+
+	//TODO: need to update accordingly
+	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+	test_to_dumb_update.m_origin = m_testActor;
+	test_to_dumb_update.m_towards = m_dumbActor;
+	m_testActor->UpdateRelationship(test_to_dumb_update);
+
+	g_numActionsEdTook++;
+
+}
+
+void Game::EddPerformsAHatefulAction()
+{
+	Emotion hateful_emotion;
+
+	hateful_emotion = Emotion::GenerateDecayEmotion();
+	hateful_emotion[EMOTION_HATE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	hateful_emotion[EMOTION_DISLIKING] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	hateful_emotion[EMOTION_NEGATIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	m_testActor->ApplyEmotion(hateful_emotion);
+
+	//TODO: need to update accordingly
+	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+	test_to_dumb_update.m_origin = m_testActor;
+	test_to_dumb_update.m_towards = m_dumbActor;
+	m_testActor->UpdateRelationship(test_to_dumb_update);
+
+	g_numActionsEdTook++;
+
+}
+
+void Game::EddPerformsAnIntriguingAction()
+{
+	Emotion intriguing_emotion;
+
+	intriguing_emotion = Emotion::GenerateDecayEmotion();
+	intriguing_emotion[EMOTION_INTEREST] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	intriguing_emotion[EMOTION_LIKING] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	intriguing_emotion[EMOTION_POSITIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	m_testActor->ApplyEmotion(intriguing_emotion);
+
+	//TODO: need to update accordingly
+	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+	test_to_dumb_update.m_origin = m_testActor;
+	test_to_dumb_update.m_towards = m_dumbActor;
+	m_testActor->UpdateRelationship(test_to_dumb_update);
+
+	g_numActionsEdTook++;
+
+}
+
+void Game::EddPerformsADisgustingAction()
+{
+	Emotion disgusting_emotion;
+
+	disgusting_emotion = Emotion::GenerateDecayEmotion();
+	disgusting_emotion[EMOTION_DISGUST] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	disgusting_emotion[EMOTION_DISLIKING] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	disgusting_emotion[EMOTION_NEGATIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+	m_testActor->ApplyEmotion(disgusting_emotion);
+
+	//TODO: need to update accordingly
+	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+	test_to_dumb_update.m_origin = m_testActor;
+	test_to_dumb_update.m_towards = m_dumbActor;
+	m_testActor->UpdateRelationship(test_to_dumb_update);
+
+	g_numActionsEdTook++;
+
+}
+
+
+void Game::UpdateEdsActions()
+{
+	std::string window_name = "Ed's Actions";
+
+	Vec2 profile_size = Vec2(50, 50);
+	bool display = true;
+	ImGuiWindowFlags window_flags = 0;
+	window_flags |= ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoResize;
+
+	const ImVec2 size = ImVec2(profile_size.x, profile_size.y);
+	const float alpha_override = -1.0f;
+	if (!ImGui::Begin(window_name.c_str(), &display, size, 
+		alpha_override, window_flags))
+	{
+		ImGui::End();
+		return;
+	}
+
+	if(ImGui::Button("Random Action"))
+		EddPerformsRandomAction();
+
+	if(ImGui::Button("Hopeful Action"))
+		EddPerformsAHopefulAction();
+
+	if(ImGui::Button("Fearful Action"))
+		EddPerformsAFearfulAction();
+
+	if(ImGui::Button("Lovable Action"))
+		EddPerformsALovableAction();
+
+	if(ImGui::Button("Hateful Action"))
+		EddPerformsAHatefulAction();
+
+	if(ImGui::Button("Intriguing Action"))
+		EddPerformsAnIntriguingAction();
+
+	if(ImGui::Button("Disgusting Action"))
+		EddPerformsADisgustingAction();
+
+	ImGui::End();
 }

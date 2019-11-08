@@ -19,7 +19,7 @@ public:
 	
 	void Startup();
 	void Update(double delta_seconds);
-	void UpdateImGUI() const;
+	void UpdateImGUI();
 	void Render() const;
 	void Shutdown();
 	bool HandleKeyPressed(unsigned char key_code);
@@ -49,4 +49,16 @@ private:
 	void LoadGameAssets();
 
 	void EddPerformsRandomAction();
+
+	// debug code: stating from the child and bubbling back up
+	// social role updating is still random, but because this
+	// is debug code, I did not implement their proper functionality
+	void EddPerformsAHopefulAction();
+	void EddPerformsAFearfulAction();
+	void EddPerformsALovableAction();
+	void EddPerformsAHatefulAction();
+	void EddPerformsAnIntriguingAction();
+	void EddPerformsADisgustingAction();
+	
+	void UpdateEdsActions();
 };
