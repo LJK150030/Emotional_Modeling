@@ -92,3 +92,38 @@ void EmotionalState::DrawImguiGraph()
 		ImGui::TreePop();
 	}
 }
+
+//creates a CSV file, and adds it to the log.txt
+//TODO: need to be abel to have seperate files rather than one large txt file
+void EmotionalState::LogEmotionalState()
+{
+	std::string header = "";
+
+	for(int name_idx = 0; name_idx < NUM_EMOTIONS; ++name_idx)
+	{
+		header.append(Emotion::m_emotionName[name_idx]);
+
+		if(name_idx != NUM_EMOTIONS - 1)
+			header.append(",");
+	}
+
+	Logf("emotional state", header.c_str());
+	LogFlush();
+
+	for(int emotional_history = 0; emotional_history < m_emotionalHistory.size(); ++emotional_history)
+	{
+		std::string emotion_instance = "";
+				
+		for(int emotion_idx = 0; emotion_idx < NUM_EMOTIONS; ++emotion_idx)
+		{
+			emotion_instance.append(std::to_string(m_emotionalHistory[emotional_history][emotion_idx]));
+
+			if(emotion_idx != NUM_EMOTIONS - 1)
+				emotion_instance.append(",");
+		}
+
+		Logf("emotional state", emotion_instance.c_str());
+		LogFlush();
+	}
+
+}

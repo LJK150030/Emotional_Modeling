@@ -35,6 +35,8 @@ public: // member public functions
 	void ApplyEmotion(Emotion& emotion);
 	void AddRelationship(SocialRole& social_role);
 	void UpdateRelationship(SocialRole& social_role);
+
+	void LogData( Actor* relations_with );
 	
 public: // shared public functions
 	static void InitCharacterSheet( uint num_port_x, uint num_port_y, uint num_pixels_x, uint num_pixels_y );

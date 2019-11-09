@@ -179,6 +179,7 @@ void EngineStartup()
 	g_theEventSystem->SubscribeEventCallbackFunction("quit", QuitRequest);
 	g_theEventSystem->SubscribeEventCallbackFunction("ShowMemAlloc", PrintMemAlloc);
 	g_theEventSystem->SubscribeEventCallbackFunction("LogMemAlloc", LogMemAlloc);
+
 	g_theRenderer->Startup();
 
 	g_theDevConsole = new DevConsole;
@@ -192,6 +193,7 @@ void EngineStartup()
 	
 	Dispatcher::Init(7);
 	LogSystemInit(LOG_DIR.c_str());
+	LogEnableAll();
 }
 
 void EngineShutdown()

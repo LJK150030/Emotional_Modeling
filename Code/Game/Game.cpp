@@ -10,13 +10,24 @@
 #include "Engine/Renderer/ImGUISystem.hpp"
 #include "Engine/Tools/Profiler.hpp"
 #include "ThirdParty/imGUI/imgui.h"
+#include "Game/App.hpp"
 #include "Game/Actor.hpp"
 #include "Game/SocialRole.hpp"
 #include "Emotion.hpp"
 
+STATIC bool LogAgentData(EventArgs& args)
+{
+	Actor* test_actor = g_theApp->GetTheGame()->GetTestActor();
+	test_actor->LogData(g_theApp->GetTheGame()->GetPlayableActor());
+	
+	return false;
+}
+
 Game::Game()
 {
 	LoadGameAssets();
+
+	g_theEventSystem->SubscribeEventCallbackFunction("logData", LogAgentData);
 }
 
 
@@ -128,6 +139,16 @@ bool Game::HandleKeyReleased(const unsigned char key_code)
 
 void Game::GarbageCollection() const
 {
+}
+
+Actor* Game::GetTestActor()
+{
+	return m_testActor;
+}
+
+Actor* Game::GetPlayableActor()
+{
+	return m_dumbActor;
 }
 
 void Game::TestImGui() const

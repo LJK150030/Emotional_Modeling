@@ -97,6 +97,7 @@ static bool DevConsLogFlush(EventArgs& args);
 static bool QuitRequest(EventArgs& args);
 static bool PrintMemAlloc(EventArgs& args);
 static bool LogMemAlloc(EventArgs& args);
+static bool LogAgentData(EventArgs& args);
 
 //---------------------------------------------------------
 // Hooks

@@ -30,6 +30,6 @@ public:
 
 	//debug helpers
 	void DrawImguiGraph();
-	void LogSocialRelation();
+	void LogSocialRelation( Actor* from, Actor* to );
 };
 

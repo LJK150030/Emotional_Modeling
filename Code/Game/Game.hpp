@@ -26,6 +26,9 @@ public:
 	bool HandleKeyReleased(unsigned char key_code);
 	void GarbageCollection() const;
 
+	Actor* GetTestActor();
+	Actor* GetPlayableActor();
+
 private:
 	
 	Camera* m_gameCamera = nullptr;

@@ -17,6 +17,8 @@ public:
 	bool HandleQuitRequested();
 	void HardRestart();
 
+	Game* GetTheGame();
+
 private:
 	void BeginFrame() const;
 	void Update();

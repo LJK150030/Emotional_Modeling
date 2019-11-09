@@ -121,6 +121,11 @@ void App::HardRestart()
 	Startup();
 }
 
+Game* App::GetTheGame()
+{
+	return m_theGame;
+}
+
 bool App::HandleKeyPressed(const unsigned char key_code)
 {
 	switch (key_code)

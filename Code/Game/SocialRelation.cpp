@@ -105,6 +105,41 @@ void SocialRelation::DrawImguiGraph()
 }
 
 
+void SocialRelation::LogSocialRelation( Actor* from, Actor* to )
+{
+	std::vector<SocialRole> m_socialHistory = m_socialMap[std::pair<Actor*, Actor*>(from, to)];
+
+	std::string header = "";
+
+	for(int name_idx = 0; name_idx < NUM_SOCIAL_ASPECT; ++name_idx)
+	{
+		header.append(SocialRole::m_socialAspectName[name_idx]);
+
+		if(name_idx != NUM_SOCIAL_ASPECT - 1)
+			header.append(",");
+	}
+
+	Logf("social relations", header.c_str());
+	LogFlush();
+
+	for(int social_history = 0; social_history < m_socialHistory.size(); ++social_history)
+	{
+		std::string social_relation_instance = "";
+
+		for(int social_idx = 0; social_idx < NUM_SOCIAL_ASPECT; ++social_idx)
+		{
+			social_relation_instance.append(std::to_string(m_socialHistory[social_history][social_idx]));
+
+			if(social_idx != NUM_SOCIAL_ASPECT - 1)
+				social_relation_instance.append(",");
+		}
+
+		Logf("social relations", social_relation_instance.c_str());
+		LogFlush();
+	}
+}
+
+
 SocialRole SocialRelation::GetTheirRelationshipToMe(Actor* me, Actor* them)
 {
 	const auto result = m_socialMap.find(std::pair<Actor*, Actor*>(me, them));

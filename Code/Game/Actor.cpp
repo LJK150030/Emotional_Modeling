@@ -142,10 +142,12 @@ bool Actor::PopulateFromXml(std::string& file_dir)
 	return false;
 }
 
+
 void Actor::AddRelationship(SocialRole& social_role)
 {
 	m_perceivedSocialRelation->AddSocialRole(social_role);
 }
+
 
 void Actor::UpdateRelationship(SocialRole& social_role)
 {
@@ -154,15 +156,29 @@ void Actor::UpdateRelationship(SocialRole& social_role)
 	m_perceivedSocialRelation->AddSocialRole(current);
 }
 
+
+void Actor::LogData( Actor* relations_with )
+{
+
+	m_emotionalState->LogEmotionalState();
+	Logf("emotional state", "\n");
+
+	m_perceivedSocialRelation->LogSocialRelation(this, relations_with);
+	Logf("social relation", "\n");
+
+};
+
 void Actor::ApplyEmotion(Emotion& emotion)
 {
 	m_emotionalState->AddEmotion(m_emotionalState->GetCurrentEmotion() + emotion);
 }
 
+
 void Actor::Update(float delta_seconds)
 {
 	UNUSED(delta_seconds);
 }
+
 
 Vec4 Actor::CalcUvPortraitCoord()
 {
@@ -173,6 +189,7 @@ Vec4 Actor::CalcUvPortraitCoord()
 
 	return Vec4(u_min, v_min, u_max, v_max);
 }
+
 
 void Actor::DrawPortrait()
 {
