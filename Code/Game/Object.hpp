@@ -3,7 +3,7 @@
 
 class Object final : public Entity
 {
-	explicit Object(Game* the_game, std::string& name);
+	explicit Object(Game* the_game, std::string name);
 	virtual ~Object();
 
 	void Update(float delta_seconds) override;

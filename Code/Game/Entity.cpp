@@ -3,7 +3,7 @@
 
 //will own entity (PlayerShip, Asteroid, Bullet)
 
-Entity::Entity(Game* the_game, std::string& name): m_game(the_game), m_name(name)
+Entity::Entity(Game* the_game, std::string name): m_game(the_game), m_name(name)
 {
 }
 

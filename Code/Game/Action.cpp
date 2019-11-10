@@ -1,13 +1,10 @@
 #include "Game/Action.hpp"
 #include "Engine/EngineCommon.hpp"
 
-Action::Action(Game* the_game, std::string& name) :	Entity(the_game, name)
-{
-}
+Action::Action(Game* the_game, std::string name) :	Entity(the_game, name) {}
+Action::Action(Game* the_game, std::string name, float communal_effect) : Entity(the_game, name), m_communalEffect(communal_effect) { }
 
-Action::~Action()
-{
-}
+Action::~Action() {}
 
 void Action::Update(float delta_seconds)
 {

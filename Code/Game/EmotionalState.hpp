@@ -7,6 +7,7 @@ struct EmotionHistory {
 	float history[MAX_HISTORY]; 
 };
 
+
 class EmotionalState
 {
 public:

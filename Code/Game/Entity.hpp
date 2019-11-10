@@ -9,7 +9,7 @@ class Game;
 class Entity
 {
 public:
-	explicit Entity(Game* the_game, std::string& name);
+	explicit Entity(Game* the_game, std::string name);
 	virtual ~Entity();
 	
 	virtual void Update(float delta_seconds)			= 0;

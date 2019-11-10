@@ -3,6 +3,8 @@
 #include "Engine/Math/Vec2.hpp"
 #include "Engine/Renderer/RenderContext.hpp"
 
+class Actor;
+class Action;
 class Emotion;
 class Personality;
 class EmotionalState;
@@ -13,6 +15,14 @@ class Attitude;
 class PraiseRelation;
 class Praise;
 
+struct ExperiencedActions
+{
+	Actor* actor = nullptr;
+	Action* action = nullptr;
+	Actor* patient = nullptr;
+	float certainty = 0.0f;
+};
+
 class Actor final : public Entity
 {
 public: // shared public variables
@@ -20,7 +30,7 @@ public: // shared public variables
 
 	
 public: // member public functions
-	explicit Actor(Game* the_game, std::string& name, IntVec2& portrait_coord);
+	explicit Actor(Game* the_game, std::string name, IntVec2& portrait_coord);
 	virtual ~Actor();
 
 	void Update(float delta_seconds) override;
@@ -30,6 +40,9 @@ public: // member public functions
 	bool DestroyEntity() override;
 	bool PopulateFromXml(std::string& file_dir) override;
 
+	Emotion GenerateEmotionFromAction(const Action& action, const Actor& from);
+	//applying emotion from an aciton
+	void ReactToAction(Action& action, Actor& from);
 
 	//debugging
 	void ApplyEmotion(Emotion& emotion);
@@ -37,6 +50,7 @@ public: // member public functions
 	void UpdateRelationship(SocialRole& social_role);
 
 	void LogData( Actor* relations_with );
+	void LogActionsExperienced();
 	
 public: // shared public functions
 	static void InitCharacterSheet( uint num_port_x, uint num_port_y, uint num_pixels_x, uint num_pixels_y );
@@ -63,6 +77,8 @@ private: // member private variables
 	//portrait data
 	IntVec2 m_portraitCoord = IntVec2::ZERO;
 	Vec4 m_portraitUV = Vec4::ZERO;
+
+	std::vector<ExperiencedActions> m_actionsExperienced;
 	
 private: // shared private variables
 	static IntVec2 s_charSheetPixels;

@@ -151,7 +151,7 @@ STATIC bool LogMemAlloc(EventArgs& args)
 void OutputLog(const LogMessageHeaderT* log_info)
 {
 	char filter[256];
-	char message[256];
+	char message[512];
 
 	memcpy(filter, log_info->filter, log_info->size_of_filter);
 	memcpy(message, log_info->message, log_info->size_of_message);

@@ -7,6 +7,7 @@ class Shader;
 class GPUMesh;
 class Material;
 class Actor;
+class Action;
 
 class Game
 {
@@ -45,23 +46,33 @@ private:
 
 	Actor* m_testActor = nullptr;
 	Actor* m_dumbActor = nullptr;
+	std::vector<Action*> m_validActions;
 
 private:
 	void TestImGui() const;
 
 	void LoadGameAssets();
+	void InitActors();
+	void InitSocialRoles();
+	void InitActions();
 
-	void EddPerformsRandomAction();
+// 	void EddPerformsRandomAction();
+// 
+// 	// debug code: stating from the child and bubbling back up.
+// 	// social role updating is still random, but because this
+// 	// is debug code, I did not implement their proper functionality
+// 	void EddPerformsAHopefulAction();
+// 	void EddPerformsAFearfulAction();
+// 	void EddPerformsALovableAction();
+// 	void EddPerformsAHatefulAction();
+// 	void EddPerformsAnIntriguingAction();
+// 	void EddPerformsADisgustingAction();
 
-	// debug code: stating from the child and bubbling back up
-	// social role updating is still random, but because this
-	// is debug code, I did not implement their proper functionality
-	void EddPerformsAHopefulAction();
-	void EddPerformsAFearfulAction();
-	void EddPerformsALovableAction();
-	void EddPerformsAHatefulAction();
-	void EddPerformsAnIntriguingAction();
-	void EddPerformsADisgustingAction();
+	// debug code once more: this time we are performing an action, and
+	// test agent will react to it. However, since we know that we are only
+	// applying this to test agent, I am not making the event system.
+	// Instead I can apply the action directly onto test actor.
+	
 	
 	void UpdateEdsActions();
 };

@@ -1,7 +1,7 @@
 #include "Game/Object.hpp"
 #include "Engine/EngineCommon.hpp"
 
-Object::Object(Game* the_game, std::string& name) :	Entity(the_game, name)
+Object::Object(Game* the_game, std::string name) :	Entity(the_game, name)
 {
 	
 }

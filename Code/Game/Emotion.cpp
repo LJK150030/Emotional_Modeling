@@ -55,7 +55,7 @@ STATIC Emotion Emotion::GenerateRandomEmotion()
 	return new_emotion;
 }
 
-Emotion Emotion::GenerateDecayEmotion()
+STATIC Emotion Emotion::GenerateDecayEmotion()
 {
 	Emotion decay_emotion;
 

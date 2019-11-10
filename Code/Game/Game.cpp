@@ -12,11 +12,13 @@
 #include "ThirdParty/imGUI/imgui.h"
 #include "Game/App.hpp"
 #include "Game/Actor.hpp"
+#include "Game/Action.hpp"
 #include "Game/SocialRole.hpp"
-#include "Emotion.hpp"
+#include "Game/Emotion.hpp"
 
 STATIC bool LogAgentData(EventArgs& args)
 {
+	UNUSED(args);
 	Actor* test_actor = g_theApp->GetTheGame()->GetTestActor();
 	test_actor->LogData(g_theApp->GetTheGame()->GetPlayableActor());
 	
@@ -33,11 +35,6 @@ Game::Game()
 
 Game::~Game()
 {
-	delete m_testActor;
-	m_testActor = nullptr;
-
-	delete m_dumbActor;
-	m_dumbActor = nullptr;
 }
 
 void Game::Startup()
@@ -56,6 +53,19 @@ void Game::Startup()
 
 void Game::Shutdown()
 {
+	for(int action_idx = 0; action_idx < m_validActions.size(); ++action_idx)
+	{
+		delete m_validActions[action_idx];
+		m_validActions[action_idx] = nullptr;
+	}
+	m_validActions.clear();
+
+	delete m_testActor;
+	m_testActor = nullptr;
+
+	delete m_dumbActor;
+	m_dumbActor = nullptr;
+
 	Actor::DeinitCharacterSheet();
 
 	delete m_gameCamera;
@@ -120,8 +130,6 @@ bool Game::HandleKeyPressed(const unsigned char key_code)
 	{
 	case SPACE_BAR:
 		{
-			//Ed performs an action onto Bob
-			EddPerformsRandomAction();
 			return true;
 		}
 	default:
@@ -185,6 +193,14 @@ void Game::LoadGameAssets()
 
 	
 	//load in actors
+	InitActors();
+	InitSocialRoles();
+	InitActions();
+}
+
+
+void Game::InitActors()
+{
 	std::string test_name = std::string("Bob");
 	IntVec2 test_uv_coord = IntVec2(1, 5);
 	m_testActor = new Actor(this, test_name, test_uv_coord);
@@ -192,147 +208,169 @@ void Game::LoadGameAssets()
 	std::string dumb_name = std::string("Ed");
 	IntVec2 dumb_uv_coord = IntVec2(1, 3);
 	m_dumbActor = new Actor(this, dumb_name, dumb_uv_coord);
+}
 
+
+void Game::InitSocialRoles()
+{
 	
 	//set social roles for each actors
 	SocialRole test_to_dumb_init = SocialRole::GenerateRandomSocialRoleInit();
 	test_to_dumb_init.m_origin = m_testActor;
 	test_to_dumb_init.m_towards = m_dumbActor;
 	m_testActor->AddRelationship(test_to_dumb_init);
+	
 }
 
-void Game::EddPerformsRandomAction()
+
+void Game::InitActions()
 {
-	Emotion temp_emotion = Emotion::GenerateRandomEmotion();
-	m_testActor->ApplyEmotion(temp_emotion);
-
-	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
-	test_to_dumb_update.m_origin = m_testActor;
-	test_to_dumb_update.m_towards = m_dumbActor;
-	m_testActor->UpdateRelationship(test_to_dumb_update);
-
-	g_numActionsEdTook++;
+	m_validActions = std::vector<Action*>();
+	
+	m_validActions.push_back(new Action( this, std::string("Admonish"), 0.36f)); // warn or reprimand someone firmly.
+	m_validActions.emplace_back(new Action( this, std::string("Agitate"), 0.22f)); // make (someone) troubled or nervous
+	m_validActions.emplace_back(new Action( this, std::string("Alleviate"), 0.65f)); // make (suffering, deficiency, or a problem) less severe.
+	m_validActions.emplace_back(new Action( this, std::string("Awkward"), 0.28f)); // causing embarrassment or inconvenience.
+	m_validActions.emplace_back(new Action( this, std::string("Backpedal"), 0.4f)); // reverse one's previous opinion.
+	m_validActions.emplace_back(new Action( this, std::string("Blank"), 0.5f)); // To forget.
+	m_validActions.emplace_back(new Action( this, std::string("Brainstorm"), 0.6f)); // To think through.
+	m_validActions.emplace_back(new Action( this, std::string("Compromise"), 0.55f)); // To work out a deal.
+	m_validActions.emplace_back(new Action( this, std::string("Comradery"), 0.7f)); // the quality of affording easy familiarity and sociability
 }
 
-void Game::EddPerformsAHopefulAction()
-{
-	Emotion hopeful_emotion;
 
-	hopeful_emotion = Emotion::GenerateDecayEmotion();
-	hopeful_emotion[EMOTION_HOPE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	hopeful_emotion[EMOTION_PLEASED] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	hopeful_emotion[EMOTION_POSITIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	m_testActor->ApplyEmotion(hopeful_emotion);
-
-	//TODO: need to update accordingly
-	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
-	test_to_dumb_update.m_origin = m_testActor;
-	test_to_dumb_update.m_towards = m_dumbActor;
-	m_testActor->UpdateRelationship(test_to_dumb_update);
-
-	g_numActionsEdTook++;
-
-}
-
-void Game::EddPerformsAFearfulAction()
-{
-	Emotion fearful_emotion;
-
-	fearful_emotion = Emotion::GenerateDecayEmotion();
-	fearful_emotion[EMOTION_FEAR] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	fearful_emotion[EMOTION_DISPLEASED] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	fearful_emotion[EMOTION_NEGATIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	m_testActor->ApplyEmotion(fearful_emotion);
-
-	//TODO: need to update accordingly
-	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
-	test_to_dumb_update.m_origin = m_testActor;
-	test_to_dumb_update.m_towards = m_dumbActor;
-	m_testActor->UpdateRelationship(test_to_dumb_update);
-
-	g_numActionsEdTook++;
-
-}
-
-void Game::EddPerformsALovableAction()
-{
-	Emotion fearful_emotion;
-
-	fearful_emotion = Emotion::GenerateDecayEmotion();
-	fearful_emotion[EMOTION_LOVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	fearful_emotion[EMOTION_LIKING] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	fearful_emotion[EMOTION_POSITIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	m_testActor->ApplyEmotion(fearful_emotion);
-
-	//TODO: need to update accordingly
-	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
-	test_to_dumb_update.m_origin = m_testActor;
-	test_to_dumb_update.m_towards = m_dumbActor;
-	m_testActor->UpdateRelationship(test_to_dumb_update);
-
-	g_numActionsEdTook++;
-
-}
-
-void Game::EddPerformsAHatefulAction()
-{
-	Emotion hateful_emotion;
-
-	hateful_emotion = Emotion::GenerateDecayEmotion();
-	hateful_emotion[EMOTION_HATE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	hateful_emotion[EMOTION_DISLIKING] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	hateful_emotion[EMOTION_NEGATIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	m_testActor->ApplyEmotion(hateful_emotion);
-
-	//TODO: need to update accordingly
-	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
-	test_to_dumb_update.m_origin = m_testActor;
-	test_to_dumb_update.m_towards = m_dumbActor;
-	m_testActor->UpdateRelationship(test_to_dumb_update);
-
-	g_numActionsEdTook++;
-
-}
-
-void Game::EddPerformsAnIntriguingAction()
-{
-	Emotion intriguing_emotion;
-
-	intriguing_emotion = Emotion::GenerateDecayEmotion();
-	intriguing_emotion[EMOTION_INTEREST] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	intriguing_emotion[EMOTION_LIKING] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	intriguing_emotion[EMOTION_POSITIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	m_testActor->ApplyEmotion(intriguing_emotion);
-
-	//TODO: need to update accordingly
-	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
-	test_to_dumb_update.m_origin = m_testActor;
-	test_to_dumb_update.m_towards = m_dumbActor;
-	m_testActor->UpdateRelationship(test_to_dumb_update);
-
-	g_numActionsEdTook++;
-
-}
-
-void Game::EddPerformsADisgustingAction()
-{
-	Emotion disgusting_emotion;
-
-	disgusting_emotion = Emotion::GenerateDecayEmotion();
-	disgusting_emotion[EMOTION_DISGUST] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	disgusting_emotion[EMOTION_DISLIKING] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	disgusting_emotion[EMOTION_NEGATIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
-	m_testActor->ApplyEmotion(disgusting_emotion);
-
-	//TODO: need to update accordingly
-	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
-	test_to_dumb_update.m_origin = m_testActor;
-	test_to_dumb_update.m_towards = m_dumbActor;
-	m_testActor->UpdateRelationship(test_to_dumb_update);
-
-	g_numActionsEdTook++;
-
-}
+// void Game::EddPerformsRandomAction()
+// {
+// 	Emotion temp_emotion = Emotion::GenerateRandomEmotion();
+// 	m_testActor->ApplyEmotion(temp_emotion);
+// 
+// 	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+// 	test_to_dumb_update.m_origin = m_testActor;
+// 	test_to_dumb_update.m_towards = m_dumbActor;
+// 	m_testActor->UpdateRelationship(test_to_dumb_update);
+// 
+// 	g_numActionsEdTook++;
+// }
+// 
+// void Game::EddPerformsAHopefulAction()
+// {
+// 	Emotion hopeful_emotion;
+// 
+// 	hopeful_emotion = Emotion::GenerateDecayEmotion();
+// 	hopeful_emotion[EMOTION_HOPE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	hopeful_emotion[EMOTION_PLEASED] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	hopeful_emotion[EMOTION_POSITIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	m_testActor->ApplyEmotion(hopeful_emotion);
+// 
+// 	//TODO: need to update accordingly
+// 	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+// 	test_to_dumb_update.m_origin = m_testActor;
+// 	test_to_dumb_update.m_towards = m_dumbActor;
+// 	m_testActor->UpdateRelationship(test_to_dumb_update);
+// 
+// 	g_numActionsEdTook++;
+// 
+// }
+// 
+// void Game::EddPerformsAFearfulAction()
+// {
+// 	Emotion fearful_emotion;
+// 
+// 	fearful_emotion = Emotion::GenerateDecayEmotion();
+// 	fearful_emotion[EMOTION_FEAR] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	fearful_emotion[EMOTION_DISPLEASED] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	fearful_emotion[EMOTION_NEGATIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	m_testActor->ApplyEmotion(fearful_emotion);
+// 
+// 	//TODO: need to update accordingly
+// 	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+// 	test_to_dumb_update.m_origin = m_testActor;
+// 	test_to_dumb_update.m_towards = m_dumbActor;
+// 	m_testActor->UpdateRelationship(test_to_dumb_update);
+// 
+// 	g_numActionsEdTook++;
+// 
+// }
+// 
+// void Game::EddPerformsALovableAction()
+// {
+// 	Emotion fearful_emotion;
+// 
+// 	fearful_emotion = Emotion::GenerateDecayEmotion();
+// 	fearful_emotion[EMOTION_LOVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	fearful_emotion[EMOTION_LIKING] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	fearful_emotion[EMOTION_POSITIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	m_testActor->ApplyEmotion(fearful_emotion);
+// 
+// 	//TODO: need to update accordingly
+// 	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+// 	test_to_dumb_update.m_origin = m_testActor;
+// 	test_to_dumb_update.m_towards = m_dumbActor;
+// 	m_testActor->UpdateRelationship(test_to_dumb_update);
+// 
+// 	g_numActionsEdTook++;
+// 
+// }
+// 
+// void Game::EddPerformsAHatefulAction()
+// {
+// 	Emotion hateful_emotion;
+// 
+// 	hateful_emotion = Emotion::GenerateDecayEmotion();
+// 	hateful_emotion[EMOTION_HATE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	hateful_emotion[EMOTION_DISLIKING] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	hateful_emotion[EMOTION_NEGATIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	m_testActor->ApplyEmotion(hateful_emotion);
+// 
+// 	//TODO: need to update accordingly
+// 	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+// 	test_to_dumb_update.m_origin = m_testActor;
+// 	test_to_dumb_update.m_towards = m_dumbActor;
+// 	m_testActor->UpdateRelationship(test_to_dumb_update);
+// 
+// 	g_numActionsEdTook++;
+// 
+// }
+// 
+// void Game::EddPerformsAnIntriguingAction()
+// {
+// 	Emotion intriguing_emotion;
+// 
+// 	intriguing_emotion = Emotion::GenerateDecayEmotion();
+// 	intriguing_emotion[EMOTION_INTEREST] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	intriguing_emotion[EMOTION_LIKING] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	intriguing_emotion[EMOTION_POSITIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	m_testActor->ApplyEmotion(intriguing_emotion);
+// 
+// 	//TODO: need to update accordingly
+// 	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+// 	test_to_dumb_update.m_origin = m_testActor;
+// 	test_to_dumb_update.m_towards = m_dumbActor;
+// 	m_testActor->UpdateRelationship(test_to_dumb_update);
+// 
+// 	g_numActionsEdTook++;
+// 
+// }
+// 
+// void Game::EddPerformsADisgustingAction()
+// {
+// 	Emotion disgusting_emotion;
+// 
+// 	disgusting_emotion = Emotion::GenerateDecayEmotion();
+// 	disgusting_emotion[EMOTION_DISGUST] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	disgusting_emotion[EMOTION_DISLIKING] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	disgusting_emotion[EMOTION_NEGATIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
+// 	m_testActor->ApplyEmotion(disgusting_emotion);
+// 
+// 	//TODO: need to update accordingly
+// 	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+// 	test_to_dumb_update.m_origin = m_testActor;
+// 	test_to_dumb_update.m_towards = m_dumbActor;
+// 	m_testActor->UpdateRelationship(test_to_dumb_update);
+// 
+// 	g_numActionsEdTook++;
+// 
+// }
 
 
 void Game::UpdateEdsActions()
@@ -354,26 +392,45 @@ void Game::UpdateEdsActions()
 		return;
 	}
 
-	if(ImGui::Button("Random Action"))
-		EddPerformsRandomAction();
+	//display all of the actions available to ed
+	for(int action_idx = 0; action_idx < m_validActions.size(); ++action_idx)
+	{
+		if(ImGui::Button(m_validActions[action_idx]->GetName().c_str()))
+		{
+			// call event <ed, m_validActions[action_idx], Tom, certainty? >
+			// I understand how to do the first three arguments, but calculating certainty may
+			// come from the receiving actor not knowing what kind of social role this person is.
+			// This can work, but will have to use the current social relationship, then update
+			// the social relationship accordingly.
+			
+			m_testActor->ReactToAction(*m_validActions[action_idx], *m_dumbActor);
+			g_numActionsEdTook++;
+		}
+	}
 
-	if(ImGui::Button("Hopeful Action"))
-		EddPerformsAHopefulAction();
+// 	if(ImGui::Button("Random Action"))
+// 		EddPerformsRandomAction();
+// 
+// 	if(ImGui::Button("Hopeful Action"))
+// 		EddPerformsAHopefulAction();
+// 
+// 	if(ImGui::Button("Fearful Action"))
+// 		EddPerformsAFearfulAction();
+// 
+// 	if(ImGui::Button("Lovable Action"))
+// 		EddPerformsALovableAction();
+// 
+// 	if(ImGui::Button("Hateful Action"))
+// 		EddPerformsAHatefulAction();
+// 
+// 	if(ImGui::Button("Intriguing Action"))
+// 		EddPerformsAnIntriguingAction();
+// 
+// 	if(ImGui::Button("Disgusting Action"))
+// 		EddPerformsADisgustingAction();
 
-	if(ImGui::Button("Fearful Action"))
-		EddPerformsAFearfulAction();
 
-	if(ImGui::Button("Lovable Action"))
-		EddPerformsALovableAction();
-
-	if(ImGui::Button("Hateful Action"))
-		EddPerformsAHatefulAction();
-
-	if(ImGui::Button("Intriguing Action"))
-		EddPerformsAnIntriguingAction();
-
-	if(ImGui::Button("Disgusting Action"))
-		EddPerformsADisgustingAction();
+	
 
 	ImGui::End();
 }

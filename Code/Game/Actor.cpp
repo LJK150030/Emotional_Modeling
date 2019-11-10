@@ -1,4 +1,5 @@
 #include "Game/Actor.hpp"
+#include "Game/Action.hpp"
 #include "Game/Personality.hpp"
 #include "Game/EmotionalState.hpp"
 #include "Game/Emotion.hpp"
@@ -36,7 +37,7 @@ STATIC void Actor::DeinitCharacterSheet()
 }
 
 
-Actor::Actor(Game* the_game, std::string& name, IntVec2& portrait_coord):
+Actor::Actor(Game* the_game, std::string name, IntVec2& portrait_coord):
 	Entity(the_game, name), m_portraitCoord(portrait_coord)
 {
 	//given the portrait_coord, need to calculate the image UVs
@@ -57,6 +58,8 @@ Actor::Actor(Game* the_game, std::string& name, IntVec2& portrait_coord):
 	
 	
 	m_emotionalState->AddEmotion(Emotion::GenerateRandomEmotionInit());
+
+	m_actionsExperienced = std::vector<ExperiencedActions>();
 
 // 	for(int num = 0; num < DEMO_NUM_INTERACTIONS; ++num)
 // 	{
@@ -142,6 +145,45 @@ bool Actor::PopulateFromXml(std::string& file_dir)
 	return false;
 }
 
+Emotion Actor::GenerateEmotionFromAction(const Action& action, const Actor& from)
+{
+	Emotion emotion_generated;
+	float starting_valiance = action.m_communalEffect;
+
+	return emotion_generated;
+}
+
+// using PME model to calculate new emotion
+void Actor::ReactToAction(Action& action, Actor& from)
+{
+	//Emotion_update = current_emotion + change_in_emotion + decay_emotion
+	
+	//Generate emotion from the action and with our current social relationship
+	Emotion current_emotion = m_emotionalState->GetCurrentEmotion();
+	Emotion change_in_emotion = GenerateEmotionFromAction(action, from);
+	Emotion decay_emotion = Emotion::GenerateDecayEmotion();
+
+	Emotion updated_emotion = current_emotion;
+	updated_emotion += change_in_emotion;
+	updated_emotion += decay_emotion;
+	m_emotionalState->AddEmotion(updated_emotion);
+
+	
+	//Updating our social relationship based on the emotions that were created
+	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+ 	test_to_dumb_update.m_origin = this;
+ 	test_to_dumb_update.m_towards = &from;
+ 	UpdateRelationship(test_to_dumb_update);
+
+	// document and add to container
+	ExperiencedActions new_experience;
+	new_experience.actor = this;
+	new_experience.action = &action;
+	new_experience.patient = &from;
+	new_experience.certainty = 1.0f;
+	m_actionsExperienced.push_back(new_experience);
+}
+
 
 void Actor::AddRelationship(SocialRole& social_role)
 {
@@ -159,6 +201,8 @@ void Actor::UpdateRelationship(SocialRole& social_role)
 
 void Actor::LogData( Actor* relations_with )
 {
+	LogActionsExperienced();
+	Logf("Actions", "\n");
 
 	m_emotionalState->LogEmotionalState();
 	Logf("emotional state", "\n");
@@ -166,6 +210,26 @@ void Actor::LogData( Actor* relations_with )
 	m_perceivedSocialRelation->LogSocialRelation(this, relations_with);
 	Logf("social relation", "\n");
 
+}
+
+void Actor::LogActionsExperienced()
+{
+	Logf("Actions","instance, event");
+
+	for(int action_idx = 0; action_idx < m_actionsExperienced.size(); ++action_idx)
+	{
+		// format: index: <actor, action, patient, certainty>
+		const ExperiencedActions experienced_instance = m_actionsExperienced[action_idx];
+		Logf("Actions",
+			"%i, <%s, %s, %s, %f>",
+			action_idx, 
+			experienced_instance.actor->GetName().c_str(), 
+			experienced_instance.action->GetName().c_str(),
+			experienced_instance.patient->GetName().c_str(),
+			experienced_instance.certainty);
+	}
+
+	LogFlush();
 };
 
 void Actor::ApplyEmotion(Emotion& emotion)
