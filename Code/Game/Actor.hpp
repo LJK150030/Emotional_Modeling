@@ -40,10 +40,12 @@ public: // member public functions
 	bool DestroyEntity() override;
 	bool PopulateFromXml(std::string& file_dir) override;
 
-	Emotion GenerateEmotionFromAction(const Action& action, const Actor& from);
+	Emotion GenerateEmotionFromAction(Action& action, Actor& from);
+	SocialRole GenerateSocialRoleFromEmotion(Emotion& felt_emotion, Actor& from);
 	//applying emotion from an aciton
 	void ReactToAction(Action& action, Actor& from);
-
+	float CertantyOfRelationship();
+	
 	//debugging
 	void ApplyEmotion(Emotion& emotion);
 	void AddRelationship(SocialRole& social_role);

@@ -9,6 +9,7 @@
 #include "Engine/EngineCommon.hpp"
 #include "ThirdParty/imGUI/imgui.h"
 #include "Engine/Renderer/RenderContext.hpp"
+#include "Engine/Math/MathUtils.hpp"
 
 STATIC ID3D11ShaderResourceView* Actor::s_characterSheet = nullptr;
 STATIC IntVec2 Actor::s_charSheetPixels = IntVec2::ZERO;
@@ -145,12 +146,107 @@ bool Actor::PopulateFromXml(std::string& file_dir)
 	return false;
 }
 
-Emotion Actor::GenerateEmotionFromAction(const Action& action, const Actor& from)
+// TODO: look into decision trees to help with the diamond pattern
+Emotion Actor::GenerateEmotionFromAction(Action& action, Actor& from)
 {
 	Emotion emotion_generated;
 	float starting_valiance = action.m_communalEffect;
 
+	// mood
+	float offset_valiance = starting_valiance - 0.5f;
+	if(offset_valiance >= 0.0f)
+	{
+		emotion_generated[EMOTION_POSITIVE] = SmoothStart5(offset_valiance);
+	}
+	else
+	{
+		emotion_generated[EMOTION_NEGATIVE] = SmoothStart5(-1.0f * offset_valiance);
+	}
+
+
+	// for objects or actors
+	SocialRole current_social_role = m_perceivedSocialRelation->GetTheirRelationshipToMe(this, &from);
+	float familiarity = current_social_role.m_relationshipMakeup[SOCIAL_ASPECT_FAMILIARITY];
+	if(offset_valiance >= 0.0f)
+	{
+		emotion_generated[EMOTION_LIKING] = SmoothStart4(offset_valiance);
+		if(familiarity >= 0.5f) // we are familiar with it
+		{
+			emotion_generated[EMOTION_LOVE] = SmoothStart3(offset_valiance);
+		}
+		else
+		{
+			emotion_generated[EMOTION_INTEREST] = SmoothStart3(offset_valiance);
+		}
+	}
+	else
+	{
+		emotion_generated[EMOTION_DISLIKING] = SmoothStart4(-1.0f * offset_valiance);
+		if(familiarity >= 0.5f) // we are familiar with it
+		{
+			emotion_generated[EMOTION_HATE] = SmoothStart3(-1.0f * offset_valiance);
+		}
+		else
+		{
+			emotion_generated[EMOTION_DISGUST] = SmoothStart3(-1.0f * offset_valiance);
+		}
+	}
+
+	// for just actors
+	if(offset_valiance >= 0.0f)
+	{
+		emotion_generated[EMOTION_APPROVING] = SmoothStart4(offset_valiance);
+		if(&from == this)
+		{
+			emotion_generated[EMOTION_PRIDE] = SmoothStart3(offset_valiance);
+			//TODO: Related Consequence and action
+			//emotion_generated[EMOTION_GRATIFICATION] = SmoothStart2(offset_valiance);
+		}
+		else
+		{
+			//TODO: Related Consequence and action
+			emotion_generated[EMOTION_ADMIRATION] = SmoothStart3(offset_valiance);
+			//TODO: Related Consequence and action
+			//emotion_generated[EMOTION_GRATITUDE] = SmoothStart2(offset_valiance);
+		}
+	}
+	else
+	{
+		emotion_generated[EMOTION_DISAPPROVING] = SmoothStart4(-1.0f * offset_valiance);
+		if(&from == this)
+		{
+			emotion_generated[EMOTION_SHAME] = SmoothStart3( -1.0f * offset_valiance);
+			//TODO: Related Consequence and action
+			//emotion_generated[EMOTION_GRATIFICATION] = SmoothStart2(offset_valiance);
+		}
+		else
+		{
+			emotion_generated[EMOTION_REPROACH] = SmoothStart3( -1.0f * offset_valiance);
+			//TODO: Related Consequence and action
+			//emotion_generated[EMOTION_ANGER] = SmoothStart2(offset_valiance);
+		}
+	}
+
+	// for events
+	if(offset_valiance >= 0.0f)
+	{
+		emotion_generated[EMOTION_PLEASED] = SmoothStart4(offset_valiance);
+
+		
+	}
+	else
+	{
+		emotion_generated[EMOTION_DISPLEASED] = SmoothStart4(offset_valiance);
+	}
+	
 	return emotion_generated;
+}
+
+SocialRole Actor::GenerateSocialRoleFromEmotion(Emotion& felt_emotion, Actor& from)
+{
+	SocialRole social_role_generated;
+
+	return social_role_generated;
 }
 
 // using PME model to calculate new emotion
@@ -170,7 +266,8 @@ void Actor::ReactToAction(Action& action, Actor& from)
 
 	
 	//Updating our social relationship based on the emotions that were created
-	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
+	//TODO: need to 
+	SocialRole test_to_dumb_update = GenerateSocialRoleFromEmotion(updated_emotion, from);
  	test_to_dumb_update.m_origin = this;
  	test_to_dumb_update.m_towards = &from;
  	UpdateRelationship(test_to_dumb_update);
@@ -182,6 +279,13 @@ void Actor::ReactToAction(Action& action, Actor& from)
 	new_experience.patient = &from;
 	new_experience.certainty = 1.0f;
 	m_actionsExperienced.push_back(new_experience);
+}
+
+float Actor::CertantyOfRelationship()
+{
+	//TODO: return the dot product of our current relationship
+	// with our perceived relationship
+	return 0.0f;
 }
 
 

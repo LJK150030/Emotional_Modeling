@@ -2,11 +2,11 @@
 #include "Engine/EngineCommon.hpp"
 #include "Engine/Core/EventSystem.hpp"
 
-#define MAX_HISTORY 64
+#define MAX_HISTORY 128
 #define MIN_UNIT_VALUE 0.0f
 #define MAX_UNIT_VALUE 1.0f
 #define DEMO_NUM_INTERACTIONS 24
-#define EMOTION_DECAY_VALUE -0.01f
+#define EMOTION_DECAY_VALUE -0.0001f
 
 //--------------------------------------------------------
 // Forward declirations
