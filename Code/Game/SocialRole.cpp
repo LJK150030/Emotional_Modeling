@@ -137,6 +137,8 @@ RelationshipType* SocialRole::GetClosestRelationshipType()
 
 float SocialRole::CertaintyOfRelationshipType(RelationshipType* relationship)
 {
+	// we know that our vectors will have a length between 0.0f and 1.0f
+	
 	//create vectors from the origin to the point for
 	//	current relationship
 	//	relationship type
@@ -155,8 +157,49 @@ float SocialRole::CertaintyOfRelationshipType(RelationshipType* relationship)
 		relationship->m_relationshipMakeup[3]
 	);
 
-	//TODO: keep going!
-	return 0.0f;
+	// calculate the projected vector from current to type
+	
+	float a_dot_b = current_relationship.x * relationship_type.x +
+		current_relationship.y * relationship_type.y +
+		current_relationship.z * relationship_type.z +
+		current_relationship.w * relationship_type.w;
+
+	float b_length = relationship_type.GetLength();
+
+	float scalar_projection = a_dot_b/b_length;
+	
+	Vec4 projected_vector = relationship_type.GetNormalize();
+	projected_vector *= scalar_projection;
+
+	// we want the length of the projected vector, and a percent of how much it
+	// overlaps the type vector.
+
+	float projected_length = projected_vector.GetLength();
+	float projected_length_ratio = projected_length/b_length;
+
+	// this vector will never go in the opposite direction of the type,
+	// but the overlap can be longer than the length of the type,
+	// so, we want the value to be (100% - (overlap_ratio - 100%))
+	// however, now it can have a negative percentage, so clamp to 0%
+
+	if(projected_length_ratio > 1.0f)
+	{
+		projected_length_ratio = 1.0f - (projected_length_ratio - 1.0f);
+	}
+
+	projected_length_ratio = ClampFloat(projected_length_ratio, 0.0f, 1.0f);
+
+	// calculate the vector rejection by current_relationship - projected_vector
+	Vec4 vector_rejection = current_relationship - projected_vector;
+
+	// we want the length of the rejection vector, and a percent of a unit vector
+	// this percentage also needs to be the reciprocal, the closer we are, the similar we are
+	float vector_rejection_length = vector_rejection.GetLength();
+	float vector_rejection_ratio = 1.0f - vector_rejection_length;
+	projected_length_ratio = ClampFloat(vector_rejection_ratio, 0.0f, 1.0f);
+
+	
+	return projected_length_ratio * projected_length_ratio;
 }
 
 SocialRole SocialRole::operator+(SocialRole& social_role_vec) const
