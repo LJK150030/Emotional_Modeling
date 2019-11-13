@@ -291,14 +291,6 @@ Emotion Actor::GenerateEmotionFromAction(Action& action, Actor& from)
 	return emotion_generated;
 }
 
-SocialRole Actor::GenerateSocialRoleFromEmotion(Emotion& felt_emotion, Actor& from)
-{
-	//TODO: update social role based on the values generated from the emotions felt
-	SocialRole social_role_generated;
-
-	return social_role_generated;
-}
-
 // using PME model to calculate new emotion
 void Actor::ReactToAction(Action& action, Actor& from)
 {
@@ -316,9 +308,7 @@ void Actor::ReactToAction(Action& action, Actor& from)
 
 	
 	//Updating our social relationship based on the emotions that were created
-	SocialRole test_to_dumb_update = GenerateSocialRoleFromEmotion(updated_emotion, from);
- 	test_to_dumb_update.m_origin = this;
- 	test_to_dumb_update.m_towards = &from;
+	SocialRole test_to_dumb_update(this, &from, updated_emotion);
  	UpdateRelationship(test_to_dumb_update);
 
 	// document and add to container

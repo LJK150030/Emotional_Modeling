@@ -89,6 +89,120 @@ SocialRole::SocialRole(Actor* origin, Actor* towards, RelationshipType relations
 	}
 }
 
+//this is to only update social roles
+SocialRole::SocialRole(Actor* origin, Actor* towards, const Emotion& emotion):
+	m_origin(origin), m_towards(towards)
+{
+
+	
+	for(int emo_idx = 0; emo_idx < NUM_EMOTIONS; ++emo_idx)
+	{
+		float emotion_value = emotion.m_emotions[emo_idx];
+
+		if(emotion_value == 0.0f) continue;
+
+		switch(emo_idx)
+		{
+		case EMOTION_POSITIVE:
+			break;
+			
+		case EMOTION_NEGATIVE:
+			break;
+			
+		case EMOTION_PLEASED:
+			break;
+			
+		case EMOTION_DISPLEASED:
+			break;
+			
+		case EMOTION_HOPE:
+			break;
+			
+		case EMOTION_FEAR:
+			break;
+			
+		case EMOTION_JOY:
+			break;
+			
+		case EMOTION_DISTRESS:
+			break;
+			
+		case EMOTION_SATISFACTION:
+			break;
+			
+		case EMOTION_FEARS_CONFIRMED:
+			break;
+			
+		case EMOTION_RELIEF:
+			break;
+			
+		case EMOTION_DISAPPOINTMENT:
+			break;
+			
+		case EMOTION_HAPPY_FOR:
+			break;
+			
+		case EMOTION_RESENTMENT:
+			break;
+			
+		case EMOTION_GLOATING:
+			break;
+			
+		case EMOTION_PITY:
+			break;
+			
+		case EMOTION_APPROVING:
+			break;
+			
+		case EMOTION_DISAPPROVING:
+			break;
+			
+		case EMOTION_PRIDE:
+			break;
+			
+		case EMOTION_SHAME:
+			break;
+			
+		case EMOTION_ADMIRATION:
+			break;
+			
+		case EMOTION_REPROACH:
+			break;
+			
+		case EMOTION_GRATIFICATION:
+			break;
+			
+		case EMOTION_REMORSE:
+			break;
+			
+		case EMOTION_GRATITUDE:
+			break;
+			
+		case EMOTION_ANGER:
+			break;
+			
+		case EMOTION_LIKING:
+			break;
+			
+		case EMOTION_DISLIKING:
+			break;
+			
+		case EMOTION_LOVE:
+			break;
+			
+		case EMOTION_HATE:
+			break;
+			
+		case EMOTION_INTEREST:
+			break;
+			
+		case EMOTION_DISGUST:
+			break;
+			
+		}
+	}
+}
+
 SocialRole::~SocialRole() = default;
 
 

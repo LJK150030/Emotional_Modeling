@@ -2,6 +2,7 @@
 #include "Game/GameCommon.hpp"
 #include "ThirdParty/imGUI/imgui.h"
 #include <utility>
+#include "Emotion.hpp"
 
 class Actor;
 
@@ -47,6 +48,7 @@ public:
 		float init_solidarity, float init_familiarity);
 	SocialRole(Actor* origin, Actor* towards, float social_role_vector[NUM_SOCIAL_ASPECT]);
 	SocialRole(Actor* origin, Actor* towards, RelationshipType relationship_type);
+	SocialRole(Actor* origin, Actor* towards, const Emotion& emotion);
 	~SocialRole();
 	
 	//accessors 
