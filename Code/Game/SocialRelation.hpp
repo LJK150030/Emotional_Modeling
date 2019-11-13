@@ -27,7 +27,8 @@ public:
 	bool DoIKnowThisActor(Actor* me, Actor* them) const;
 	SocialAspectHistory* GetHistory(Actor* me, Actor* them, SocialAspect social_aspect, int start_instance, int end_instance);
 	std::vector<std::pair<Actor*, Actor*>> GetConnectionList();
-
+	RelationshipType* GetClosestRelationshipType(Actor* me, Actor* them);
+	
 	//debug helpers
 	void DrawImguiGraph();
 	void LogSocialRelation( Actor* from, Actor* to );

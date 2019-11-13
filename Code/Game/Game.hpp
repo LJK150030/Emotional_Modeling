@@ -8,6 +8,7 @@ class GPUMesh;
 class Material;
 class Actor;
 class Action;
+struct RelationshipType;
 
 class Game
 {
@@ -46,7 +47,6 @@ private:
 
 	Actor* m_testActor = nullptr;
 	Actor* m_dumbActor = nullptr;
-	std::vector<Action*> m_validActions;
 
 private:
 	void TestImGui() const;
@@ -55,6 +55,7 @@ private:
 	void InitActors();
 	void InitSocialRoles();
 	void InitActions();
+	void InitSocialRelations();
 
 // 	void EddPerformsRandomAction();
 // 

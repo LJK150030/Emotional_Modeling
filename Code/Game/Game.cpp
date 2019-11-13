@@ -14,7 +14,6 @@
 #include "Game/Actor.hpp"
 #include "Game/Action.hpp"
 #include "Game/SocialRole.hpp"
-#include "Game/Emotion.hpp"
 
 STATIC bool LogAgentData(EventArgs& args)
 {
@@ -53,12 +52,19 @@ void Game::Startup()
 
 void Game::Shutdown()
 {
-	for(int action_idx = 0; action_idx < m_validActions.size(); ++action_idx)
+	for(int relationship_idx = 0; relationship_idx < g_validRelationships.size(); ++relationship_idx)
 	{
-		delete m_validActions[action_idx];
-		m_validActions[action_idx] = nullptr;
+		delete g_validRelationships[relationship_idx];
+		g_validRelationships[relationship_idx] = nullptr;
 	}
-	m_validActions.clear();
+	g_validRelationships.clear();
+
+	for(int action_idx = 0; action_idx < g_validActions.size(); ++action_idx)
+	{
+		delete g_validActions[action_idx];
+		g_validActions[action_idx] = nullptr;
+	}
+	g_validActions.clear();
 
 	delete m_testActor;
 	m_testActor = nullptr;
@@ -193,9 +199,10 @@ void Game::LoadGameAssets()
 
 	
 	//load in actors
+	InitActions();
+	InitSocialRelations();
 	InitActors();
 	InitSocialRoles();
-	InitActions();
 }
 
 
@@ -219,23 +226,40 @@ void Game::InitSocialRoles()
 	test_to_dumb_init.m_origin = m_testActor;
 	test_to_dumb_init.m_towards = m_dumbActor;
 	m_testActor->AddRelationship(test_to_dumb_init);
-	
+
+
+	//two ways of going about this
+	//comment out this code, to set Bob's relationship type with Ed as a stranger
+	//otherwise uncomment this code means Bob already has a relationship with Ed
+	m_testActor->DetermineRelationshipWith(m_dumbActor);
 }
 
 
 void Game::InitActions()
 {
-	m_validActions = std::vector<Action*>();
+	g_validActions = std::vector<Action*>();
 	
-	m_validActions.push_back(new Action( this, std::string("Admonish"), 0.36f)); // warn or reprimand someone firmly.
-	m_validActions.emplace_back(new Action( this, std::string("Agitate"), 0.22f)); // make (someone) troubled or nervous
-	m_validActions.emplace_back(new Action( this, std::string("Alleviate"), 0.65f)); // make (suffering, deficiency, or a problem) less severe.
-	m_validActions.emplace_back(new Action( this, std::string("Awkward"), 0.28f)); // causing embarrassment or inconvenience.
-	m_validActions.emplace_back(new Action( this, std::string("Backpedal"), 0.4f)); // reverse one's previous opinion.
-	m_validActions.emplace_back(new Action( this, std::string("Blank"), 0.5f)); // To forget.
-	m_validActions.emplace_back(new Action( this, std::string("Brainstorm"), 0.6f)); // To think through.
-	m_validActions.emplace_back(new Action( this, std::string("Compromise"), 0.55f)); // To work out a deal.
-	m_validActions.emplace_back(new Action( this, std::string("Comradery"), 0.7f)); // the quality of affording easy familiarity and sociability
+	g_validActions.push_back(new Action(this, std::string("Admonish"), 0.36f)); // warn or reprimand someone firmly.
+	g_validActions.push_back(new Action(this, std::string("Agitate"), 0.22f)); // make (someone) troubled or nervous
+	g_validActions.push_back(new Action(this, std::string("Alleviate"), 0.65f)); // make (suffering, deficiency, or a problem) less severe.
+	g_validActions.push_back(new Action(this, std::string("Awkward"), 0.28f)); // causing embarrassment or inconvenience.
+	g_validActions.push_back(new Action(this, std::string("Backpedal"), 0.4f)); // reverse one's previous opinion.
+	g_validActions.push_back(new Action(this, std::string("Blank"), 0.5f)); // To forget.
+	g_validActions.push_back(new Action(this, std::string("Brainstorm"), 0.6f)); // To think through.
+	g_validActions.push_back(new Action(this, std::string("Compromise"), 0.55f)); // To work out a deal.
+	g_validActions.push_back(new Action(this, std::string("Comradery"), 0.7f)); // the quality of affording easy familiarity and sociability
+}
+
+void Game::InitSocialRelations()
+{
+	g_validRelationships = std::vector<RelationshipType*>();
+
+	g_validRelationships.push_back(new RelationshipType("stranger", 0.5f, 0.5f, 0.5f, 0.0f));
+	g_validRelationships.push_back(new RelationshipType("Parent child", 0.7f, 0.8f, 0.6f, 0.7f));
+	g_validRelationships.push_back(new RelationshipType("Child parent", 0.7f, 0.2f, 0.6f, 0.7f));
+	g_validRelationships.push_back(new RelationshipType("Boss worker", 0.5f, 0.8f, 0.5f, 0.5f));
+	g_validRelationships.push_back(new RelationshipType("stranger", 0.5f, 0.2f, 0.5f, 0.5f));
+	
 }
 
 
@@ -262,7 +286,6 @@ void Game::InitActions()
 // 	hopeful_emotion[EMOTION_POSITIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
 // 	m_testActor->ApplyEmotion(hopeful_emotion);
 // 
-// 	//TODO: need to update accordingly
 // 	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
 // 	test_to_dumb_update.m_origin = m_testActor;
 // 	test_to_dumb_update.m_towards = m_dumbActor;
@@ -282,7 +305,6 @@ void Game::InitActions()
 // 	fearful_emotion[EMOTION_NEGATIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
 // 	m_testActor->ApplyEmotion(fearful_emotion);
 // 
-// 	//TODO: need to update accordingly
 // 	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
 // 	test_to_dumb_update.m_origin = m_testActor;
 // 	test_to_dumb_update.m_towards = m_dumbActor;
@@ -302,7 +324,6 @@ void Game::InitActions()
 // 	fearful_emotion[EMOTION_POSITIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
 // 	m_testActor->ApplyEmotion(fearful_emotion);
 // 
-// 	//TODO: need to update accordingly
 // 	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
 // 	test_to_dumb_update.m_origin = m_testActor;
 // 	test_to_dumb_update.m_towards = m_dumbActor;
@@ -322,7 +343,6 @@ void Game::InitActions()
 // 	hateful_emotion[EMOTION_NEGATIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
 // 	m_testActor->ApplyEmotion(hateful_emotion);
 // 
-// 	//TODO: need to update accordingly
 // 	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
 // 	test_to_dumb_update.m_origin = m_testActor;
 // 	test_to_dumb_update.m_towards = m_dumbActor;
@@ -342,7 +362,6 @@ void Game::InitActions()
 // 	intriguing_emotion[EMOTION_POSITIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
 // 	m_testActor->ApplyEmotion(intriguing_emotion);
 // 
-// 	//TODO: need to update accordingly
 // 	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
 // 	test_to_dumb_update.m_origin = m_testActor;
 // 	test_to_dumb_update.m_towards = m_dumbActor;
@@ -362,7 +381,6 @@ void Game::InitActions()
 // 	disgusting_emotion[EMOTION_NEGATIVE] = g_randomNumberGenerator.GetRandomFloatInRange(0.0f, 0.1f);
 // 	m_testActor->ApplyEmotion(disgusting_emotion);
 // 
-// 	//TODO: need to update accordingly
 // 	SocialRole test_to_dumb_update = SocialRole::GenerateRandomSocialRole();
 // 	test_to_dumb_update.m_origin = m_testActor;
 // 	test_to_dumb_update.m_towards = m_dumbActor;
@@ -393,9 +411,9 @@ void Game::UpdateEdsActions()
 	}
 
 	//display all of the actions available to ed
-	for(int action_idx = 0; action_idx < m_validActions.size(); ++action_idx)
+	for(int action_idx = 0; action_idx < g_validActions.size(); ++action_idx)
 	{
-		if(ImGui::Button(m_validActions[action_idx]->GetName().c_str()))
+		if(ImGui::Button(g_validActions[action_idx]->GetName().c_str()))
 		{
 			// call event <ed, m_validActions[action_idx], Tom, certainty? >
 			// I understand how to do the first three arguments, but calculating certainty may
@@ -403,7 +421,7 @@ void Game::UpdateEdsActions()
 			// This can work, but will have to use the current social relationship, then update
 			// the social relationship accordingly.
 			
-			m_testActor->ReactToAction(*m_validActions[action_idx], *m_dumbActor);
+			m_testActor->ReactToAction(*g_validActions[action_idx], *m_dumbActor);
 			g_numActionsEdTook++;
 		}
 	}

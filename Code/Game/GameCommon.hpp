@@ -7,12 +7,15 @@
 #define MAX_UNIT_VALUE 1.0f
 #define DEMO_NUM_INTERACTIONS 24
 #define EMOTION_DECAY_VALUE -0.0001f
+#define MIN_CERTAINTY 0.8f
 
 //--------------------------------------------------------
 // Forward declirations
 struct Rgba;
 struct Vec2;
+struct RelationshipType;
 class App;
+class Action;
 
 //---------------------------------------------------------
 // global game objects
@@ -79,6 +82,8 @@ constexpr int TILDE_KEY = 192;
 
 extern float g_startTime;
 extern int g_numActionsEdTook;
+extern std::vector<Action*> g_validActions;
+extern std::vector<RelationshipType*> g_validRelationships;
 //---------------------------------------------------------
 // global helper game functions
 

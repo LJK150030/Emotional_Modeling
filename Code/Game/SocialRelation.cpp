@@ -51,6 +51,19 @@ std::vector<std::pair<Actor*, Actor*>> SocialRelation::GetConnectionList()
 	return connection_list;
 }
 
+RelationshipType* SocialRelation::GetClosestRelationshipType(Actor* me, Actor* them)
+{
+	const auto result = m_socialMap.find(std::pair<Actor*, Actor*>(me, them));
+
+	//If I cannot find the relationship, then this is a stranger
+	if(result == m_socialMap.end())
+	{
+		return &RelationshipType::s_stranger;
+	}
+
+	return result->second.back().GetClosestRelationshipType();
+}
+
 
 float GetSocialValFromHistory(const void* data, int idx)
 {
@@ -150,7 +163,7 @@ SocialRole SocialRelation::GetTheirRelationshipToMe(Actor* me, Actor* them)
 		m_socialMap.emplace(
 			std::pair<Actor*, Actor*>(me, them),
 			std::vector<SocialRole>());
-		m_socialMap[std::pair<Actor*, Actor*>(me, them)].emplace_back(me, them, SocialRole::s_stranger);
+		m_socialMap[std::pair<Actor*, Actor*>(me, them)].emplace_back(me, them, RelationshipType::s_stranger);
 		return m_socialMap[std::pair<Actor*, Actor*>(me, them)].back();
 	}
 

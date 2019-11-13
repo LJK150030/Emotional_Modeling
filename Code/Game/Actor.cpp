@@ -54,6 +54,7 @@ Actor::Actor(Game* the_game, std::string name, IntVec2& portrait_coord):
 	
 	m_emotionalState = new EmotionalState();
 	m_perceivedSocialRelation = new SocialRelation();
+	m_closestRelationType = &RelationshipType::s_stranger;
 	m_attitudeRelation = new AttitudeRelation();
 	m_praiseRelation = new PraiseRelation();
 	
@@ -72,6 +73,7 @@ Actor::Actor(Game* the_game, std::string name, IntVec2& portrait_coord):
 
 Actor::~Actor()
 {
+
 	delete m_praiseRelation;
 	m_praiseRelation = nullptr;
 	
@@ -129,6 +131,11 @@ void Actor::DrawProfile()
 	m_perceivedSocialRelation->DrawImguiGraph();
 	m_attitudeRelation->DrawImguiGraph();
 	m_praiseRelation->DrawImguiGraph();
+
+	//TODO: this should be with the social relations class
+	std::string eds_relationship = "Ed is a ";
+	eds_relationship += m_closestRelationType->m_name;
+	ImGui::BulletText(eds_relationship.c_str());
 	
 	ImGui::End();
 }
@@ -166,6 +173,8 @@ Emotion Actor::GenerateEmotionFromAction(Action& action, Actor& from)
 
 	// for objects or actors
 	SocialRole current_social_role = m_perceivedSocialRelation->GetTheirRelationshipToMe(this, &from);
+	float certainty = current_social_role.CertaintyOfRelationshipType(m_closestRelationType);
+
 	float familiarity = current_social_role.m_relationshipMakeup[SOCIAL_ASPECT_FAMILIARITY];
 	if(offset_valiance >= 0.0f)
 	{
@@ -199,15 +208,21 @@ Emotion Actor::GenerateEmotionFromAction(Action& action, Actor& from)
 		if(&from == this)
 		{
 			emotion_generated[EMOTION_PRIDE] = SmoothStart3(offset_valiance);
-			//TODO: Related Consequence and action
-			//emotion_generated[EMOTION_GRATIFICATION] = SmoothStart2(offset_valiance);
+
+			if(certainty > MIN_CERTAINTY)
+			{
+				emotion_generated[EMOTION_GRATIFICATION] = SmoothStart2(offset_valiance);
+			}
 		}
 		else
 		{
-			//TODO: Related Consequence and action
 			emotion_generated[EMOTION_ADMIRATION] = SmoothStart3(offset_valiance);
-			//TODO: Related Consequence and action
-			//emotion_generated[EMOTION_GRATITUDE] = SmoothStart2(offset_valiance);
+
+			//since we are having a conversation, it is always a related consequence
+			if(certainty > MIN_CERTAINTY)
+			{
+				emotion_generated[EMOTION_GRATITUDE] = SmoothStart2(offset_valiance);
+			}
 		}
 	}
 	else
@@ -216,14 +231,22 @@ Emotion Actor::GenerateEmotionFromAction(Action& action, Actor& from)
 		if(&from == this)
 		{
 			emotion_generated[EMOTION_SHAME] = SmoothStart3( -1.0f * offset_valiance);
-			//TODO: Related Consequence and action
-			//emotion_generated[EMOTION_GRATIFICATION] = SmoothStart2(offset_valiance);
+
+			//since we are having a conversation, it is always a related consequence
+			if(certainty > MIN_CERTAINTY)
+			{
+				emotion_generated[EMOTION_REMORSE] = SmoothStart2(-1.0f * offset_valiance);
+			}
 		}
 		else
 		{
 			emotion_generated[EMOTION_REPROACH] = SmoothStart3( -1.0f * offset_valiance);
-			//TODO: Related Consequence and action
-			//emotion_generated[EMOTION_ANGER] = SmoothStart2(offset_valiance);
+
+			//since we are having a conversation, it is always a related consequence
+			if(certainty > MIN_CERTAINTY)
+			{
+				emotion_generated[EMOTION_ANGER] = SmoothStart2(-1.0f * offset_valiance);
+			}
 		}
 	}
 
@@ -231,12 +254,38 @@ Emotion Actor::GenerateEmotionFromAction(Action& action, Actor& from)
 	if(offset_valiance >= 0.0f)
 	{
 		emotion_generated[EMOTION_PLEASED] = SmoothStart4(offset_valiance);
-
 		
+		if(certainty < MIN_CERTAINTY)
+		{
+			emotion_generated[EMOTION_HOPE] = SmoothStart3(offset_valiance);
+		}
+		else //we are certain that they meant that
+		{
+			emotion_generated[EMOTION_JOY] = SmoothStart3(offset_valiance);
+
+			//TODO: Consequence confirms prospective desirable consequence
+			//TODO: Consequence disconfirms prospective undesirable consequence
+			//TODO: Consequence presumed to be desirable for other
+			//TODO: Consequence presumed to be undesirable for other
+		}
 	}
 	else
 	{
-		emotion_generated[EMOTION_DISPLEASED] = SmoothStart4(offset_valiance);
+		emotion_generated[EMOTION_DISPLEASED] = SmoothStart4(-1.0f * offset_valiance);
+		
+		if(certainty < MIN_CERTAINTY)
+		{
+			emotion_generated[EMOTION_FEAR] = SmoothStart3(-1.0f * offset_valiance);
+		}
+		else //we are certain that they meant that
+		{
+			emotion_generated[EMOTION_DISTRESS] = SmoothStart3(-1.0f * offset_valiance);
+
+			//TODO: Consequence confirms prospective undesirable consequence
+			//TODO: Consequence disconfirms prospective desirable consequence
+			//TODO: Consequence presumed to be desirable for other
+			//TODO: Consequence presumed to be undesirable for other
+		}
 	}
 	
 	return emotion_generated;
@@ -244,6 +293,7 @@ Emotion Actor::GenerateEmotionFromAction(Action& action, Actor& from)
 
 SocialRole Actor::GenerateSocialRoleFromEmotion(Emotion& felt_emotion, Actor& from)
 {
+	//TODO: update social role based on the values generated from the emotions felt
 	SocialRole social_role_generated;
 
 	return social_role_generated;
@@ -266,7 +316,6 @@ void Actor::ReactToAction(Action& action, Actor& from)
 
 	
 	//Updating our social relationship based on the emotions that were created
-	//TODO: need to 
 	SocialRole test_to_dumb_update = GenerateSocialRoleFromEmotion(updated_emotion, from);
  	test_to_dumb_update.m_origin = this;
  	test_to_dumb_update.m_towards = &from;
@@ -281,13 +330,6 @@ void Actor::ReactToAction(Action& action, Actor& from)
 	m_actionsExperienced.push_back(new_experience);
 }
 
-float Actor::CertantyOfRelationship()
-{
-	//TODO: return the dot product of our current relationship
-	// with our perceived relationship
-	return 0.0f;
-}
-
 
 void Actor::AddRelationship(SocialRole& social_role)
 {
@@ -300,6 +342,11 @@ void Actor::UpdateRelationship(SocialRole& social_role)
 	SocialRole current = m_perceivedSocialRelation->GetTheirRelationshipToMe(social_role.m_origin, social_role.m_towards);
 	current += social_role;
 	m_perceivedSocialRelation->AddSocialRole(current);
+}
+
+void Actor::DetermineRelationshipWith(Actor* relations_with)
+{
+	m_closestRelationType = m_perceivedSocialRelation->GetClosestRelationshipType(this, relations_with);
 }
 
 

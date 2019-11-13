@@ -10,6 +10,7 @@ class Personality;
 class EmotionalState;
 class SocialRelation;
 class SocialRole;
+struct RelationshipType;
 class AttitudeRelation;
 class Attitude;
 class PraiseRelation;
@@ -44,12 +45,12 @@ public: // member public functions
 	SocialRole GenerateSocialRoleFromEmotion(Emotion& felt_emotion, Actor& from);
 	//applying emotion from an aciton
 	void ReactToAction(Action& action, Actor& from);
-	float CertantyOfRelationship();
 	
 	//debugging
 	void ApplyEmotion(Emotion& emotion);
 	void AddRelationship(SocialRole& social_role);
 	void UpdateRelationship(SocialRole& social_role);
+	void DetermineRelationshipWith(Actor* relations_with);
 
 	void LogData( Actor* relations_with );
 	void LogActionsExperienced();
@@ -71,7 +72,10 @@ private: // member private variables
 	SocialRelation* m_perceivedSocialRelation;
 	AttitudeRelation* m_attitudeRelation;
 	PraiseRelation* m_praiseRelation;
-	
+
+	//TODO: this is only for one person!!! this needs to be in the social roles class
+	RelationshipType* m_closestRelationType; 
+
 	//profile data
 	bool m_displayVerboseProfile = true;
 	Vec2 m_profileSize = Vec2(50, 50);
