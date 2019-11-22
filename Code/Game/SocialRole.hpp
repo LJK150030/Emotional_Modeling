@@ -23,17 +23,22 @@ struct RelationshipType
 	RelationshipType(const std::string& name, float liking, float dominance, float solidarity, float familiarity);
 	~RelationshipType();
 
+	const char* GetDebugName() const;
+	
 	//set default values to the stranger value
 	std::string m_name = "stranger";
 	float m_relationshipMakeup[NUM_SOCIAL_ASPECT] = {0.5f, 0.5f, 0.5f, 0.0f};
 
 	static RelationshipType s_stranger;
+	
 };
 
 
 class SocialRole
 {
 public:
+	const float FAMILIARITY_GROWTH = 0.02f;
+	const float FAMILIARITY_DECAY = 0.02f; //this is not used because we are constantly talking to our test actor
 	float m_relationshipMakeup[NUM_SOCIAL_ASPECT] = {MIN_UNIT_VALUE};
 	Actor* m_origin = nullptr;
 	Actor* m_towards = nullptr;
@@ -63,11 +68,9 @@ public:
 	float& operator[] (int idx); 
 	float& operator[] (SocialAspect& idx);
 
-	
-
-public:
-	static SocialRole GenerateRandomSocialRoleInit();
-	static SocialRole GenerateRandomSocialRole();
+	//hellper
+	static SocialRole	GenerateRandomSocialRoleInit();
+	static SocialRole	GenerateRandomSocialRole();
 };
 
 //helper functions

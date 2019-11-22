@@ -18,7 +18,6 @@ STATIC Vec2 Actor::s_charSheetUVStep = Vec2::ZERO;
 STATIC float Actor::s_charPortraitSize = 250.0f;
 STATIC float Actor::s_charPortraitBoarderOffset = 25.0f;
 
-
 STATIC void Actor::InitCharacterSheet( uint num_portrait_x, uint num_portrait_y,  
 	uint num_pixels_x, uint num_pixels_y )
 {
@@ -55,6 +54,7 @@ Actor::Actor(Game* the_game, std::string name, IntVec2& portrait_coord):
 	m_emotionalState = new EmotionalState();
 	m_perceivedSocialRelation = new SocialRelation();
 	m_closestRelationType = &RelationshipType::s_stranger;
+	m_certaintyOfRelationType = 0.5f;
 	m_attitudeRelation = new AttitudeRelation();
 	m_praiseRelation = new PraiseRelation();
 	
@@ -133,9 +133,11 @@ void Actor::DrawProfile()
 	m_praiseRelation->DrawImguiGraph();
 
 	//TODO: this should be with the social relations class
-	std::string eds_relationship = "Ed is a ";
-	eds_relationship += m_closestRelationType->m_name;
-	ImGui::BulletText(eds_relationship.c_str());
+	// 	std::string eds_relationship = "Ed is a ";
+	// 	eds_relationship += m_closestRelationType->m_name;
+	// 	eds_relationship += " with a certainty of: ";
+	// 	eds_relationship += std::to_string(m_certaintyOfRelationType);
+	// 	ImGui::BulletText(eds_relationship.c_str());
 	
 	ImGui::End();
 }
@@ -163,11 +165,11 @@ Emotion Actor::GenerateEmotionFromAction(Action& action, Actor& from)
 	float offset_valiance = starting_valiance - 0.5f;
 	if(offset_valiance >= 0.0f)
 	{
-		emotion_generated[EMOTION_POSITIVE] = SmoothStart5(offset_valiance);
+		emotion_generated[EMOTION_POSITIVE] = SmoothStart4(offset_valiance);
 	}
 	else
 	{
-		emotion_generated[EMOTION_NEGATIVE] = SmoothStart5(-1.0f * offset_valiance);
+		emotion_generated[EMOTION_NEGATIVE] = SmoothStart4(-1.0f * offset_valiance);
 	}
 
 
@@ -178,74 +180,90 @@ Emotion Actor::GenerateEmotionFromAction(Action& action, Actor& from)
 	float familiarity = current_social_role.m_relationshipMakeup[SOCIAL_ASPECT_FAMILIARITY];
 	if(offset_valiance >= 0.0f)
 	{
-		emotion_generated[EMOTION_LIKING] = SmoothStart4(offset_valiance);
+		emotion_generated[EMOTION_LIKING] = SmoothStart3(offset_valiance);
 		if(familiarity >= 0.5f) // we are familiar with it
 		{
-			emotion_generated[EMOTION_LOVE] = SmoothStart3(offset_valiance);
+			float personality_bias = (*m_personality)[PERSONALITY_EXTROVERSION];
+			emotion_generated[EMOTION_LOVE] = SmoothStart2(offset_valiance) * personality_bias;
 		}
 		else
 		{
-			emotion_generated[EMOTION_INTEREST] = SmoothStart3(offset_valiance);
+			float personality_bias = (*m_personality)[PERSONALITY_OPENNESS];
+			emotion_generated[EMOTION_INTEREST] = SmoothStart2(offset_valiance) * personality_bias;
 		}
 	}
 	else
 	{
-		emotion_generated[EMOTION_DISLIKING] = SmoothStart4(-1.0f * offset_valiance);
+		emotion_generated[EMOTION_DISLIKING] = SmoothStart3(-1.0f * offset_valiance);
 		if(familiarity >= 0.5f) // we are familiar with it
 		{
-			emotion_generated[EMOTION_HATE] = SmoothStart3(-1.0f * offset_valiance);
+			float personality_bias = (*m_personality)[PERSONALITY_EXTROVERSION];
+			emotion_generated[EMOTION_HATE] = SmoothStart2(-1.0f * offset_valiance) * personality_bias;
 		}
 		else
 		{
-			emotion_generated[EMOTION_DISGUST] = SmoothStart3(-1.0f * offset_valiance);
+			float personality_bias = (*m_personality)[PERSONALITY_OPENNESS];
+			emotion_generated[EMOTION_DISGUST] = SmoothStart2(-1.0f * offset_valiance) * personality_bias;
 		}
 	}
 
 	// for just actors
 	if(offset_valiance >= 0.0f)
 	{
-		emotion_generated[EMOTION_APPROVING] = SmoothStart4(offset_valiance);
+		emotion_generated[EMOTION_APPROVING] = SmoothStart3(offset_valiance);
 		if(&from == this)
 		{
-			emotion_generated[EMOTION_PRIDE] = SmoothStart3(offset_valiance);
+			float personality_bias = (*m_personality)[PERSONALITY_CONSCIENTIOUSNESS] * (*m_personality)[PERSONALITY_NEUROTICISM];
+			personality_bias /= 2.0f;
+			
+			emotion_generated[EMOTION_PRIDE] = SmoothStart2(offset_valiance) * personality_bias;
 
 			if(certainty > MIN_CERTAINTY)
 			{
-				emotion_generated[EMOTION_GRATIFICATION] = SmoothStart2(offset_valiance);
+				emotion_generated[EMOTION_GRATIFICATION] = offset_valiance * personality_bias;
 			}
 		}
 		else
 		{
-			emotion_generated[EMOTION_ADMIRATION] = SmoothStart3(offset_valiance);
+			float personality_bias = (*m_personality)[PERSONALITY_EXTROVERSION] * (1.0f - (*m_personality)[PERSONALITY_NEUROTICISM]);
+			personality_bias /= 2.0f;
+			
+			emotion_generated[EMOTION_ADMIRATION] = SmoothStart2(offset_valiance) * personality_bias;
 
 			//since we are having a conversation, it is always a related consequence
 			if(certainty > MIN_CERTAINTY)
 			{
-				emotion_generated[EMOTION_GRATITUDE] = SmoothStart2(offset_valiance);
+				emotion_generated[EMOTION_GRATITUDE] = offset_valiance * personality_bias;
 			}
 		}
 	}
 	else
 	{
-		emotion_generated[EMOTION_DISAPPROVING] = SmoothStart4(-1.0f * offset_valiance);
+		emotion_generated[EMOTION_DISAPPROVING] = SmoothStart3(-1.0f * offset_valiance);
 		if(&from == this)
 		{
-			emotion_generated[EMOTION_SHAME] = SmoothStart3( -1.0f * offset_valiance);
+			float personality_bias = (1.0f - (*m_personality)[PERSONALITY_CONSCIENTIOUSNESS]) * (*m_personality)[PERSONALITY_NEUROTICISM];
+			personality_bias /= 2.0f;
+			
+			emotion_generated[EMOTION_SHAME] = SmoothStart2( -1.0f * offset_valiance) * personality_bias;
 
 			//since we are having a conversation, it is always a related consequence
 			if(certainty > MIN_CERTAINTY)
 			{
-				emotion_generated[EMOTION_REMORSE] = SmoothStart2(-1.0f * offset_valiance);
+				emotion_generated[EMOTION_REMORSE] = (-1.0f * offset_valiance) * personality_bias;
 			}
 		}
 		else
 		{
-			emotion_generated[EMOTION_REPROACH] = SmoothStart3( -1.0f * offset_valiance);
+			float personality_bias = (1.0f - (*m_personality)[PERSONALITY_EXTROVERSION]) * (*m_personality)[PERSONALITY_NEUROTICISM];
+			personality_bias /= 2.0f;
+			
+			emotion_generated[EMOTION_REPROACH] = SmoothStart2( -1.0f * offset_valiance) * personality_bias;
 
 			//since we are having a conversation, it is always a related consequence
 			if(certainty > MIN_CERTAINTY)
 			{
-				emotion_generated[EMOTION_ANGER] = SmoothStart2(-1.0f * offset_valiance);
+				emotion_generated[EMOTION_ANGER] = (-1.0f * offset_valiance) * personality_bias;
 			}
 		}
 	}
@@ -253,15 +271,20 @@ Emotion Actor::GenerateEmotionFromAction(Action& action, Actor& from)
 	// for events
 	if(offset_valiance >= 0.0f)
 	{
-		emotion_generated[EMOTION_PLEASED] = SmoothStart4(offset_valiance);
+		emotion_generated[EMOTION_PLEASED] = SmoothStart3(offset_valiance);
 		
 		if(certainty < MIN_CERTAINTY)
 		{
-			emotion_generated[EMOTION_HOPE] = SmoothStart3(offset_valiance);
+			float personality_bias = (*m_personality)[PERSONALITY_OPENNESS] +  (1.0f - (*m_personality)[PERSONALITY_NEUROTICISM]);
+			personality_bias /= 2.0f;
+			
+			emotion_generated[EMOTION_HOPE] = SmoothStart2(offset_valiance) * personality_bias;
 		}
 		else //we are certain that they meant that
 		{
-			emotion_generated[EMOTION_JOY] = SmoothStart3(offset_valiance);
+			float personality_bias = 1.0f - (*m_personality)[PERSONALITY_NEUROTICISM] ;
+
+			emotion_generated[EMOTION_JOY] = SmoothStart2(offset_valiance) * personality_bias;
 
 			//TODO: Consequence confirms prospective desirable consequence
 			//TODO: Consequence disconfirms prospective undesirable consequence
@@ -271,15 +294,20 @@ Emotion Actor::GenerateEmotionFromAction(Action& action, Actor& from)
 	}
 	else
 	{
-		emotion_generated[EMOTION_DISPLEASED] = SmoothStart4(-1.0f * offset_valiance);
+		emotion_generated[EMOTION_DISPLEASED] = SmoothStart3(-1.0f * offset_valiance);
 		
 		if(certainty < MIN_CERTAINTY)
 		{
-			emotion_generated[EMOTION_FEAR] = SmoothStart3(-1.0f * offset_valiance);
+			float personality_bias = (*m_personality)[PERSONALITY_OPENNESS] + (*m_personality)[PERSONALITY_NEUROTICISM];
+			personality_bias /= 2.0f;
+			
+			emotion_generated[EMOTION_FEAR] = SmoothStart2(-1.0f * offset_valiance) * personality_bias;
 		}
 		else //we are certain that they meant that
 		{
-			emotion_generated[EMOTION_DISTRESS] = SmoothStart3(-1.0f * offset_valiance);
+			float personality_bias = (*m_personality)[PERSONALITY_NEUROTICISM];
+						
+			emotion_generated[EMOTION_DISTRESS] = SmoothStart2(-1.0f * offset_valiance) * personality_bias;
 
 			//TODO: Consequence confirms prospective undesirable consequence
 			//TODO: Consequence disconfirms prospective desirable consequence
@@ -311,12 +339,21 @@ void Actor::ReactToAction(Action& action, Actor& from)
 	SocialRole test_to_dumb_update(this, &from, updated_emotion);
  	UpdateRelationship(test_to_dumb_update);
 
+	SocialRole current_relationship = m_perceivedSocialRelation->GetTheirRelationshipToMe(this, &from);
+	m_certaintyOfRelationType = current_relationship.CertaintyOfRelationshipType(m_closestRelationType);
+
+	if(m_certaintyOfRelationType < MIN_CERTAINTY)
+	{
+		DetermineRelationshipWith(&from);
+	}
+	
+
 	// document and add to container
 	ExperiencedActions new_experience;
 	new_experience.actor = this;
 	new_experience.action = &action;
 	new_experience.patient = &from;
-	new_experience.certainty = 1.0f;
+	new_experience.certainty = m_certaintyOfRelationType;
 	m_actionsExperienced.push_back(new_experience);
 }
 
@@ -344,18 +381,22 @@ void Actor::LogData( Actor* relations_with )
 {
 	LogActionsExperienced();
 	Logf("Actions", "\n");
+	LogFlush();
 
 	m_emotionalState->LogEmotionalState();
 	Logf("emotional state", "\n");
+	LogFlush();
 
 	m_perceivedSocialRelation->LogSocialRelation(this, relations_with);
 	Logf("social relation", "\n");
+	LogFlush();
 
 }
 
 void Actor::LogActionsExperienced()
 {
 	Logf("Actions","instance, event");
+	LogFlush();
 
 	for(int action_idx = 0; action_idx < m_actionsExperienced.size(); ++action_idx)
 	{
@@ -368,9 +409,10 @@ void Actor::LogActionsExperienced()
 			experienced_instance.action->GetName().c_str(),
 			experienced_instance.patient->GetName().c_str(),
 			experienced_instance.certainty);
+		
+		LogFlush();
 	}
 
-	LogFlush();
 };
 
 void Actor::ApplyEmotion(Emotion& emotion)
@@ -407,5 +449,46 @@ void Actor::DrawPortrait()
 	
 	ImGui::Image(portrait, portrait_size, portrait_uv0, portrait_uv1, tint_col, boarder_col);
 
+}
+
+const RelationshipType& Actor::GetRelationshipType() const
+{
+	return *m_closestRelationType;
+}
+
+void Actor::DrawSocialRoleGuess( const Actor& player_actor )
+{
+	if(!g_socialRoleSelectedThisTurn)
+	{
+		if (ImGui::BeginCombo("What relationship does Joe have with Ed",
+			g_socialRoleEdPicked)) // The second parameter is the label previewed before opening the combo.
+		{
+			for (int rel_idx = 0; rel_idx < static_cast<int>(g_validRelationships.size()); rel_idx++)
+			{
+				bool is_selected = (g_socialRoleEdPicked == g_validRelationships[rel_idx]->GetDebugName());
+				if (ImGui::Selectable(g_validRelationships[rel_idx]->GetDebugName(), is_selected))
+				{
+					g_socialRoleEdPicked = g_validRelationships[rel_idx]->GetDebugName();
+					g_socialRoleSelectedThisTurn = true;
+				}
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+			}
+			ImGui::EndCombo();
+		}
+	}
+	else
+	{
+		const char* actors_relationship = player_actor.GetRelationshipType().GetDebugName();
+
+		if(strcmp(g_socialRoleEdPicked, actors_relationship) == 0)
+		{
+			ImGui::Text("Joe is a %s with Ed!", g_socialRoleEdPicked);
+		}
+		else
+		{
+			ImGui::Text("Joe is not a %s with Ed...", g_socialRoleEdPicked);
+		}
+	}
 }
 

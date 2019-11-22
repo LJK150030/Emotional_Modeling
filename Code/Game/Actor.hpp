@@ -41,8 +41,10 @@ public: // member public functions
 	bool DestroyEntity() override;
 	bool PopulateFromXml(std::string& file_dir) override;
 
-	Emotion GenerateEmotionFromAction(Action& action, Actor& from);
-	SocialRole GenerateSocialRoleFromEmotion(Emotion& felt_emotion, Actor& from);
+	Emotion		GenerateEmotionFromAction(Action& action, Actor& from);
+	SocialRole	GenerateSocialRoleFromEmotion(Emotion& felt_emotion, Actor& from);
+	void		DrawSocialRoleGuess( const Actor& player_actor );
+
 	//applying emotion from an aciton
 	void ReactToAction(Action& action, Actor& from);
 	
@@ -51,7 +53,7 @@ public: // member public functions
 	void AddRelationship(SocialRole& social_role);
 	void UpdateRelationship(SocialRole& social_role);
 	void DetermineRelationshipWith(Actor* relations_with);
-
+	const RelationshipType& GetRelationshipType() const;
 	void LogData( Actor* relations_with );
 	void LogActionsExperienced();
 	
@@ -75,7 +77,8 @@ private: // member private variables
 
 	//TODO: this is only for one person!!! this needs to be in the social roles class
 	RelationshipType* m_closestRelationType; 
-
+	float m_certaintyOfRelationType;
+	
 	//profile data
 	bool m_displayVerboseProfile = true;
 	Vec2 m_profileSize = Vec2(50, 50);

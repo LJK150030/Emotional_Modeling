@@ -3,6 +3,11 @@
 
 RelationshipType::RelationshipType() = default;
 
+const char* RelationshipType::GetDebugName() const
+{
+	return m_name.c_str();
+}
+
 RelationshipType::RelationshipType(const std::string& name, const float liking, const float dominance, const float solidarity, const float familiarity)
 	: m_name(name), m_relationshipMakeup{liking, dominance, solidarity, familiarity} { }
 
@@ -93,7 +98,18 @@ SocialRole::SocialRole(Actor* origin, Actor* towards, RelationshipType relations
 SocialRole::SocialRole(Actor* origin, Actor* towards, const Emotion& emotion):
 	m_origin(origin), m_towards(towards)
 {
+	float liking_summation = 0.0f;
+	float dominance_summation = 0.0f;
+	float solidarity_summation = 0.0f;
+	float familiarity_summation = 0.0f;
 
+	float liking_instance = 0.0f;
+	float dominance_instance = 0.0f;
+	float solidarity_instance = 0.0f;
+	float familiarity_instance = 0.0f;
+
+	
+	familiarity_summation += FAMILIARITY_GROWTH;
 	
 	for(int emo_idx = 0; emo_idx < NUM_EMOTIONS; ++emo_idx)
 	{
@@ -103,104 +119,315 @@ SocialRole::SocialRole(Actor* origin, Actor* towards, const Emotion& emotion):
 
 		switch(emo_idx)
 		{
-		case EMOTION_POSITIVE:
-			break;
+			case EMOTION_POSITIVE:
+			{
+				break;
+			}
 			
-		case EMOTION_NEGATIVE:
-			break;
+			case EMOTION_NEGATIVE:
+			{
+				break;
+			}
 			
-		case EMOTION_PLEASED:
-			break;
+			case EMOTION_PLEASED:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+				break;
+			}
 			
-		case EMOTION_DISPLEASED:
-			break;
+			case EMOTION_DISPLEASED:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_HOPE:
-			break;
+			case EMOTION_HOPE:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_FEAR:
-			break;
+			case EMOTION_FEAR:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+
+				dominance_summation -= emotion_value;
+				dominance_instance += 1.0f;
+					
+				break;
+			}
 			
-		case EMOTION_JOY:
-			break;
+			case EMOTION_JOY:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_DISTRESS:
-			break;
+			case EMOTION_DISTRESS:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+
+				dominance_summation -= emotion_value;
+				dominance_instance += 1.0f;
+					
+				solidarity_summation -= emotion_value;
+				solidarity_instance += 1.0f;
+					
+				break;
+			}
 			
-		case EMOTION_SATISFACTION:
-			break;
+			case EMOTION_SATISFACTION:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+					
+				dominance_summation += emotion_value;
+				dominance_instance += 1.0f;
+					
+				break;
+			}
 			
-		case EMOTION_FEARS_CONFIRMED:
-			break;
+			case EMOTION_FEARS_CONFIRMED:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+					
+				dominance_summation -= emotion_value;
+				dominance_instance += 1.0f;
+					
+				solidarity_summation -= emotion_value;
+				solidarity_instance += 1.0f;
+					
+				break;
+			}
 			
-		case EMOTION_RELIEF:
-			break;
+			case EMOTION_RELIEF:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_DISAPPOINTMENT:
-			break;
+			case EMOTION_DISAPPOINTMENT:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_HAPPY_FOR:
-			break;
+			case EMOTION_HAPPY_FOR:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_RESENTMENT:
-			break;
+			case EMOTION_RESENTMENT:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+
+				solidarity_summation -= emotion_value;
+				solidarity_instance += 1.0f;
+					
+				break;
+			}
 			
-		case EMOTION_GLOATING:
-			break;
+			case EMOTION_GLOATING:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+
+				dominance_summation += emotion_value;
+				dominance_instance += 1.0f;
+					
+				break;
+			}
 			
-		case EMOTION_PITY:
-			break;
+			case EMOTION_PITY:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+
+				dominance_summation -= emotion_value;
+				dominance_instance += 1.0f;
+					
+				solidarity_summation -= emotion_value;
+				solidarity_instance += 1.0f;
+					
+				break;
+			}
 			
-		case EMOTION_APPROVING:
-			break;
+			case EMOTION_APPROVING:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_DISAPPROVING:
-			break;
+			case EMOTION_DISAPPROVING:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_PRIDE:
-			break;
+			case EMOTION_PRIDE:
+			{
+				dominance_summation += emotion_value;
+				dominance_instance += 1.0f;
+					
+				break;
+			}
 			
-		case EMOTION_SHAME:
-			break;
+			case EMOTION_SHAME:
+			{
+				dominance_summation -= emotion_value;
+				dominance_instance += 1.0f;
+					
+				solidarity_summation -= emotion_value;
+				solidarity_instance += 1.0f;
+					
+				break;
+			}
 			
-		case EMOTION_ADMIRATION:
-			break;
+			case EMOTION_ADMIRATION:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+
+				dominance_summation -= emotion_value;
+				dominance_instance += 1.0f;
+					
+				break;
+			}
 			
-		case EMOTION_REPROACH:
-			break;
+			case EMOTION_REPROACH:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+
+				dominance_summation += emotion_value;
+				dominance_instance += 1.0f;
+
+				solidarity_summation -= emotion_value;
+				solidarity_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_GRATIFICATION:
-			break;
+			case EMOTION_GRATIFICATION:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_REMORSE:
-			break;
+			case EMOTION_REMORSE:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_GRATITUDE:
-			break;
+			case EMOTION_GRATITUDE:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+
+				dominance_summation -= emotion_value;
+				dominance_instance += 1.0f;
+					
+				break;
+			}
 			
-		case EMOTION_ANGER:
-			break;
+			case EMOTION_ANGER:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+
+				solidarity_summation -= emotion_value;
+				solidarity_instance += 1.0f;
+					
+				break;
+			}
 			
-		case EMOTION_LIKING:
-			break;
+			case EMOTION_LIKING:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_DISLIKING:
-			break;
+			case EMOTION_DISLIKING:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_LOVE:
-			break;
+			case EMOTION_LOVE:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_HATE:
-			break;
+			case EMOTION_HATE:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_INTEREST:
-			break;
+			case EMOTION_INTEREST:
+			{
+				liking_summation += emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
-		case EMOTION_DISGUST:
-			break;
+			case EMOTION_DISGUST:
+			{
+				liking_summation -= emotion_value;
+				liking_instance += 1.0f;
+
+				break;
+			}
 			
 		}
 	}
+
+	if(liking_instance != 0.0f) liking_summation /= liking_instance;
+	if(dominance_instance != 0.0f) dominance_summation /= dominance_instance;
+	if(solidarity_instance != 0.0f) solidarity_summation /= solidarity_instance;
+	if(familiarity_instance != 0.0f) familiarity_summation /= familiarity_instance;
+
+	m_relationshipMakeup[SOCIAL_ASPECT_LIKING] = ClampFloat(liking_summation, -1.0f, 1.0f);
+	m_relationshipMakeup[SOCIAL_ASPECT_DOMINANCE] = ClampFloat(dominance_summation, -1.0f, 1.0f);
+	m_relationshipMakeup[SOCIAL_ASPECT_SOLIDARITY] = ClampFloat(solidarity_summation, -1.0f, 1.0f);
+	m_relationshipMakeup[SOCIAL_ASPECT_FAMILIARITY] = ClampFloat(familiarity_summation, -1.0f, 1.0f);
 }
 
 SocialRole::~SocialRole() = default;
@@ -214,7 +441,7 @@ std::pair<Actor*, Actor*> SocialRole::GetConnection() const
 RelationshipType* SocialRole::GetClosestRelationshipType()
 {
 	std::vector<float> distance_factor;
-	int closest_relation_idx = -1;
+	int closest_relation_idx = -1.0f;
 	//use our current relationship as a point
 	//for each relationship type, use their point and calculate the length
 	//want to return the RelationshipType that has the smallest length

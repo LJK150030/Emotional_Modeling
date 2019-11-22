@@ -6,7 +6,7 @@
 #define MIN_UNIT_VALUE 0.0f
 #define MAX_UNIT_VALUE 1.0f
 #define DEMO_NUM_INTERACTIONS 24
-#define EMOTION_DECAY_VALUE -0.0001f
+#define EMOTION_DECAY_VALUE -0.01f
 #define MIN_CERTAINTY 0.8f
 
 //--------------------------------------------------------
@@ -82,6 +82,8 @@ constexpr int TILDE_KEY = 192;
 
 extern float g_startTime;
 extern int g_numActionsEdTook;
+extern const char* g_socialRoleEdPicked;
+extern bool g_socialRoleSelectedThisTurn;
 extern std::vector<Action*> g_validActions;
 extern std::vector<RelationshipType*> g_validRelationships;
 //---------------------------------------------------------
