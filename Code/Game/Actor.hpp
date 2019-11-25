@@ -77,7 +77,10 @@ private: // member private variables
 
 	//TODO: this is only for one person!!! this needs to be in the social roles class
 	RelationshipType* m_closestRelationType; 
+	int m_numberOfGuesses = 0;
+	int m_numberOfCorrectGuesses = 0;
 	float m_certaintyOfRelationType;
+	
 	
 	//profile data
 	bool m_displayVerboseProfile = true;

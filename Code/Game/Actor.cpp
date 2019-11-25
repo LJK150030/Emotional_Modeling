@@ -175,7 +175,7 @@ Emotion Actor::GenerateEmotionFromAction(Action& action, Actor& from)
 
 	// for objects or actors
 	SocialRole current_social_role = m_perceivedSocialRelation->GetTheirRelationshipToMe(this, &from);
-	float certainty = current_social_role.CertaintyOfRelationshipType(m_closestRelationType);
+	float certainty = current_social_role.CertRelatLength(m_closestRelationType);
 
 	float familiarity = current_social_role.m_relationshipMakeup[SOCIAL_ASPECT_FAMILIARITY];
 	if(offset_valiance >= 0.0f)
@@ -340,7 +340,7 @@ void Actor::ReactToAction(Action& action, Actor& from)
  	UpdateRelationship(test_to_dumb_update);
 
 	SocialRole current_relationship = m_perceivedSocialRelation->GetTheirRelationshipToMe(this, &from);
-	m_certaintyOfRelationType = current_relationship.CertaintyOfRelationshipType(m_closestRelationType);
+	m_certaintyOfRelationType = current_relationship.CertRelatLength(m_closestRelationType);
 
 	if(m_certaintyOfRelationType < MIN_CERTAINTY)
 	{

@@ -59,7 +59,8 @@ public:
 	//accessors 
 	std::pair<Actor*, Actor*>	GetConnection() const;
 	RelationshipType*			GetClosestRelationshipType();
-	float						CertaintyOfRelationshipType(RelationshipType* relationship);
+	float						CertRelatDot(RelationshipType* relationship);
+	float						CertRelatLength(RelationshipType* relationship);
 	
 	//mutators
 	SocialRole operator+(SocialRole& social_role_vec) const; 

@@ -8,6 +8,7 @@ const char* RelationshipType::GetDebugName() const
 	return m_name.c_str();
 }
 
+
 RelationshipType::RelationshipType(const std::string& name, const float liking, const float dominance, const float solidarity, const float familiarity)
 	: m_name(name), m_relationshipMakeup{liking, dominance, solidarity, familiarity} { }
 
@@ -441,7 +442,7 @@ std::pair<Actor*, Actor*> SocialRole::GetConnection() const
 RelationshipType* SocialRole::GetClosestRelationshipType()
 {
 	std::vector<float> distance_factor;
-	int closest_relation_idx = -1.0f;
+	int closest_relation_idx = 0;
 	//use our current relationship as a point
 	//for each relationship type, use their point and calculate the length
 	//want to return the RelationshipType that has the smallest length
@@ -460,23 +461,18 @@ RelationshipType* SocialRole::GetClosestRelationshipType()
 		const Vec4 direction = relationship_type - current_relationship;
 		distance_factor.push_back(direction.GetLength());
 
-		if(closest_relation_idx == -1)
+
+		if(distance_factor[closest_relation_idx] > distance_factor.back())
 		{
-			closest_relation_idx = 0;
+			closest_relation_idx = rel_idx;
 		}
-		else
-		{
-			if(distance_factor[closest_relation_idx] > distance_factor.back())
-			{
-				closest_relation_idx = rel_idx;
-			}
-		}
+		
 	}
 
 	return g_validRelationships[closest_relation_idx];
 }
 
-float SocialRole::CertaintyOfRelationshipType(RelationshipType* relationship)
+float SocialRole::CertRelatDot(RelationshipType* relationship)
 {
 	// we know that our vectors will have a length between 0.0f and 1.0f
 	
@@ -499,7 +495,6 @@ float SocialRole::CertaintyOfRelationshipType(RelationshipType* relationship)
 	);
 
 	// calculate the projected vector from current to type
-	
 	float a_dot_b = current_relationship.x * relationship_type.x +
 		current_relationship.y * relationship_type.y +
 		current_relationship.z * relationship_type.z +
@@ -541,6 +536,35 @@ float SocialRole::CertaintyOfRelationshipType(RelationshipType* relationship)
 
 	
 	return projected_length_ratio * projected_length_ratio;
+}
+
+float SocialRole::CertRelatLength(RelationshipType* relationship)
+{
+	Vec4 current_relationship(
+		m_relationshipMakeup[0], 
+		m_relationshipMakeup[1], 
+		m_relationshipMakeup[2], 
+		m_relationshipMakeup[3]
+	);
+
+	Vec4 relationship_type(
+		relationship->m_relationshipMakeup[0], 
+		relationship->m_relationshipMakeup[1], 
+		relationship->m_relationshipMakeup[2], 
+		relationship->m_relationshipMakeup[3]
+	);
+
+
+	Vec4 dist = relationship_type - current_relationship;
+	Vec4 dist_norm = dist.GetNormalize();
+
+	float percent_diff = dist.x / dist_norm.x;
+	//float y_percent = dist.y / dist_norm.y;
+	//float z_percent = dist.z / dist_norm.z;
+	//float w_percent = dist.w / dist_norm.w;
+	//float average = (x_percent + y_percent + z_percent + w_percent) / 4.0f;
+	
+	return percent_diff;
 }
 
 SocialRole SocialRole::operator+(SocialRole& social_role_vec) const
