@@ -10,6 +10,7 @@
 #include "ThirdParty/imGUI/imgui.h"
 #include "Engine/Renderer/RenderContext.hpp"
 #include "Engine/Math/MathUtils.hpp"
+#include "Engine/Core/ErrorWarningAssert.hpp"
 
 STATIC ID3D11ShaderResourceView* Actor::s_characterSheet = nullptr;
 STATIC IntVec2 Actor::s_charSheetPixels = IntVec2::ZERO;
@@ -380,39 +381,34 @@ void Actor::DetermineRelationshipWith(Actor* relations_with)
 void Actor::LogData( Actor* relations_with )
 {
 	LogActionsExperienced();
-	Logf("Actions", "\n");
-	//LogFlush();
-
-	m_emotionalState->LogEmotionalState();
-	Logf("emotional state", "\n");
-	//LogFlush();
-
+	m_emotionalState->LogEmotionalState();	
 	m_perceivedSocialRelation->LogSocialRelation(this, relations_with);
-	Logf("social relation", "\n");
-	LogFlush();
-
 }
 
 void Actor::LogActionsExperienced()
 {
-	Logf("Actions","instance, event");
-	//LogFlush();
+	FILE* file = fopen( "Data/Log/Actions.csv", "w" ); 
+	ASSERT_OR_DIE(file != nullptr, "Unable to write to file")
+
+	std::string header = "instance, actor, action, patient, certainty\n";
+
+	fwrite( header.c_str(), 1, header.length(), file); 
 
 	for(int action_idx = 0; action_idx < m_actionsExperienced.size(); ++action_idx)
 	{
 		// format: index: <actor, action, patient, certainty>
 		const ExperiencedActions experienced_instance = m_actionsExperienced[action_idx];
-		Logf("Actions",
-			"%i, <%s, %s, %s, %f>",
-			action_idx, 
+		std::string msg = Stringf("%i, %s, %s, %s, %f\n",
+			action_idx + 1, 
 			experienced_instance.actor->GetName().c_str(), 
 			experienced_instance.action->GetName().c_str(),
 			experienced_instance.patient->GetName().c_str(),
 			experienced_instance.certainty);
 		
-		//LogFlush();
+		fwrite( msg.c_str(), 1, msg.length(), file); 
 	}
 
+	fclose(file);
 };
 
 void Actor::ApplyEmotion(Emotion& emotion)

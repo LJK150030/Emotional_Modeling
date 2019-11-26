@@ -3,6 +3,7 @@
 #include "Engine/EngineCommon.hpp"
 
 #include "ThirdParty/imGUI/imgui_plot.h"
+#include "Engine/Core/StringUtils.hpp"
 
 
 EmotionalState::EmotionalState()
@@ -97,33 +98,46 @@ void EmotionalState::DrawImguiGraph()
 //TODO: need to be abel to have seperate files rather than one large txt file
 void EmotionalState::LogEmotionalState()
 {
-	std::string header = "";
+	FILE* file = fopen( "Data/Log/EmotionalState.csv", "w" ); 
+
+	std::string header = "instance,";
 
 	for(int name_idx = 0; name_idx < NUM_EMOTIONS; ++name_idx)
 	{
 		header.append(Emotion::m_emotionName[name_idx]);
 
 		if(name_idx != NUM_EMOTIONS - 1)
+		{
 			header.append(",");
+		}
+		else
+		{
+			header.append("\n");
+		}
 	}
 
-	Logf("emotional state", header.c_str());
-	//LogFlush();
+	fwrite( header.c_str(), 1, header.length(), file); 
 
 	for(int emotional_history = 0; emotional_history < m_emotionalHistory.size(); ++emotional_history)
 	{
-		std::string emotion_instance = "";
+		std::string emotion_instance = Stringf("%i,", emotional_history);
 				
 		for(int emotion_idx = 0; emotion_idx < NUM_EMOTIONS; ++emotion_idx)
 		{
 			emotion_instance.append(std::to_string(m_emotionalHistory[emotional_history][emotion_idx]));
 
 			if(emotion_idx != NUM_EMOTIONS - 1)
+			{
 				emotion_instance.append(",");
+			}
+			else
+			{
+				emotion_instance.append("\n");
+			}
 		}
 
-		Logf("emotional state", emotion_instance.c_str());
-		//LogFlush();
+		fwrite( emotion_instance.c_str(), 1, emotion_instance.length(), file); 
 	}
-
+	
+	fclose(file);
 }
