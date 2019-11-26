@@ -133,7 +133,7 @@ void SocialRelation::LogSocialRelation( Actor* from, Actor* to )
 	}
 
 	Logf("social relations", header.c_str());
-	LogFlush();
+	//LogFlush();
 
 	for(int social_history = 0; social_history < m_socialHistory.size(); ++social_history)
 	{
@@ -148,7 +148,7 @@ void SocialRelation::LogSocialRelation( Actor* from, Actor* to )
 		}
 
 		Logf("social relations", social_relation_instance.c_str());
-		LogFlush();
+		//LogFlush();
 	}
 }
 

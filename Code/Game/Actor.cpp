@@ -381,11 +381,11 @@ void Actor::LogData( Actor* relations_with )
 {
 	LogActionsExperienced();
 	Logf("Actions", "\n");
-	LogFlush();
+	//LogFlush();
 
 	m_emotionalState->LogEmotionalState();
 	Logf("emotional state", "\n");
-	LogFlush();
+	//LogFlush();
 
 	m_perceivedSocialRelation->LogSocialRelation(this, relations_with);
 	Logf("social relation", "\n");
@@ -396,7 +396,7 @@ void Actor::LogData( Actor* relations_with )
 void Actor::LogActionsExperienced()
 {
 	Logf("Actions","instance, event");
-	LogFlush();
+	//LogFlush();
 
 	for(int action_idx = 0; action_idx < m_actionsExperienced.size(); ++action_idx)
 	{
@@ -410,7 +410,7 @@ void Actor::LogActionsExperienced()
 			experienced_instance.patient->GetName().c_str(),
 			experienced_instance.certainty);
 		
-		LogFlush();
+		//LogFlush();
 	}
 
 };

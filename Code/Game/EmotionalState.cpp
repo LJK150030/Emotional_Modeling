@@ -108,7 +108,7 @@ void EmotionalState::LogEmotionalState()
 	}
 
 	Logf("emotional state", header.c_str());
-	LogFlush();
+	//LogFlush();
 
 	for(int emotional_history = 0; emotional_history < m_emotionalHistory.size(); ++emotional_history)
 	{
@@ -123,7 +123,7 @@ void EmotionalState::LogEmotionalState()
 		}
 
 		Logf("emotional state", emotion_instance.c_str());
-		LogFlush();
+		//LogFlush();
 	}
 
 }

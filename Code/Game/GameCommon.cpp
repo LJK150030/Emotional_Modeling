@@ -196,6 +196,7 @@ void EngineStartup()
 	
 	Dispatcher::Init(7);
 	LogSystemInit(LOG_DIR.c_str());
+	LogHook(&OutputLog);
 	LogEnableAll();
 }
 

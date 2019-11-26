@@ -26,9 +26,6 @@ void App::Startup()
 	EngineStartup();
 	g_theWindow->SetMouseMode(MOUSE_MODE_ABSOLUTE);
 
-	LogHook(&OutputLog);
-	LogSystemInit( "Data/Log/TestAgentData.txt" );
-
 	//dev console camera
 	m_devCamera = new Camera();
 	m_devCamera->SetColorTarget(nullptr);
