@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Action" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAAgAAAAIAgAAAAAAgAAEAAAAAAABAAAAAAAAQ=</HashCode>
+      <FileName>Action.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Actor" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BESIAADA4iGggAAkAIAABAgIiBIwMAADwBEgQAAAQAA=</HashCode>
+      <FileName>Actor.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="App" Collapsed="true">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASBkgAAAAACAACAAAABAQAAAAAAIQAAApCCACAgAEA=</HashCode>
+      <FileName>App.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Attitude" Collapsed="true">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAABAAAAAAAAAAAQABAAGAAAAQggAgABAAAEA=</HashCode>
+      <FileName>Attitude.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AttitudeRelation" Collapsed="true">
+    <Position X="11" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAFAAAAgAAAAAAAAAAAAACAgAEAAAAIAIAAAAAAA=</HashCode>
+      <FileName>AttitudeRelation.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Emotion" Collapsed="true">
+    <Position X="12.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAACAQAAAAQAAAAEAAAAAQAAgIAAABKA=</HashCode>
+      <FileName>Emotion.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EmotionalState" Collapsed="true">
+    <Position X="7.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAQAABAAAgAAAAgAAABAAAAEAIAAAAA=</HashCode>
+      <FileName>EmotionalState.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Entity" Collapsed="true">
+    <Position X="2.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MASACAAAgAAAAAAgAAAAEAgAACAAAAAAABABAAAABBA=</HashCode>
+      <FileName>Entity.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Game" Collapsed="true">
+    <Position X="9.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IFQEAEQAIAAAAADAAAAAIZCAAAiAIQBAAZAgIAABIAI=</HashCode>
+      <FileName>Game.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Object" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAAgQAAAAAgAAAAAAgAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Object.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Personality" Collapsed="true">
+    <Position X="11" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAEAACAgACAAQAAAAAA=</HashCode>
+      <FileName>Personality.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Praise" Collapsed="true">
+    <Position X="12.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAQAAEAAAQAQIAEAAAEAAAAgABAIAEA=</HashCode>
+      <FileName>Praise.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PraiseRelation" Collapsed="true">
+    <Position X="7.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAoACIAgAAAAAEAAAAgAQAAAAAAIAAAAAAA=</HashCode>
+      <FileName>PraiseRelation.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SocialRelation" Collapsed="true">
+    <Position X="9.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAgAAAAAAAAAAIEAkAgAAAAAIABIAQAAAAA=</HashCode>
+      <FileName>SocialRelation.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SocialRole" Collapsed="true">
+    <Position X="11" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>DIAAAQAAABAAAAAAUQAAAQAAEAEQACAAAAAggBAgAEA=</HashCode>
+      <FileName>SocialRole.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="ExperiencedActions" Collapsed="true">
+    <Position X="11" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIBAAAAAAAAAAAAIAAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Actor.hpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="AttitudeAspectHistory" Collapsed="true">
+    <Position X="7.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>AttitudeRelation.hpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="EmotionHistory" Collapsed="true">
+    <Position X="9.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>EmotionalState.hpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="PraiseAspectHistory" Collapsed="true">
+    <Position X="12.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>PraiseRelation.hpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SocialAspectHistory" Collapsed="true">
+    <Position X="9.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>SocialRelation.hpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="RelationshipType" Collapsed="true">
+    <Position X="7.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAABAAAAgAAAAAIAAAAAAAAAAAgAAAAAAAgAAA=</HashCode>
+      <FileName>SocialRole.hpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="AttitudeAspect" Collapsed="true">
+    <Position X="7.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACCAAAAAAAAAAAAAAAAAAAAACAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Attitude.hpp</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EmotionType" Collapsed="true">
+    <Position X="9.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SAAIIIQAABAIAQBAOAAASIAAgAEgACQmQwQIACJgAAA=</HashCode>
+      <FileName>Emotion.hpp</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PersonalityIdex" Collapsed="true">
+    <Position X="11" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAABAAAAAAAQAAAAAACAAAgAAAIACAA=</HashCode>
+      <FileName>Personality.hpp</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="PraiseAspect" Collapsed="true">
+    <Position X="12.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAAAAEAAAAAABAAAAAA=</HashCode>
+      <FileName>Praise.hpp</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SocialAspect" Collapsed="true">
+    <Position X="7.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAIAAgAAAAAAAAAACAAAAEAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>SocialRole.hpp</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -7,6 +7,13 @@
 #include "Engine/Core/Clock.hpp"
 #include "Engine/Memory/Mem.hpp"
 
+STATIC bool QuitRequest(EventArgs& args)
+{
+	UNUSED(args);
+	g_theApp->HandleQuitRequested();
+	return true;
+}
+
 App::App(): m_theGame(nullptr)
 {
 	ParseXmlFileToNamedString(g_gameConfigBlackboard, "Data/GameConfig.xml");
@@ -31,6 +38,8 @@ void App::Startup()
 	m_devCamera->SetColorTarget(nullptr);
 	m_devCamera->SetOrthoView( Vec2(0.0f, 0.0),	Vec2((WORLD_HEIGHT * WORLD_ASPECT), (WORLD_HEIGHT)) );
 
+	g_theEventSystem->SubscribeEventCallbackFunction("quit", QuitRequest);
+	
 	m_theGame = new Game;
 	m_theGame->Startup();
 

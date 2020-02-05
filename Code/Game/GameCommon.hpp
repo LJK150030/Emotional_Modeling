@@ -87,23 +87,9 @@ extern bool g_socialRoleSelectedThisTurn;
 extern std::vector<Action*> g_validActions;
 extern std::vector<RelationshipType*> g_validRelationships;
 //---------------------------------------------------------
-// global helper game functions
-
-void EngineStartup();
-void EngineShutdown();
-
-//---------------------------------------------------------
 // Dev console functions
 
-static bool DevConLog(EventArgs& args);
-static bool DevConLogEnableAll(EventArgs& args);
-static bool DevConLogDisableAll(EventArgs& args);
-static bool DevConLogEnable(EventArgs& args);
-static bool DevConLogDisable(EventArgs& args);
-static bool DevConsLogFlush(EventArgs& args);
 static bool QuitRequest(EventArgs& args);
-static bool PrintMemAlloc(EventArgs& args);
-static bool LogMemAlloc(EventArgs& args);
 static bool LogAgentData(EventArgs& args);
 
 //---------------------------------------------------------

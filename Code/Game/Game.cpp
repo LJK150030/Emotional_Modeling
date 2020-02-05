@@ -17,7 +17,7 @@
 
 STATIC bool LogAgentData(EventArgs& args)
 {
-	//UNUSED(args);
+	UNUSED(args);
 	Actor* test_actor = g_theApp->GetTheGame()->GetTestActor();
 	test_actor->LogData(g_theApp->GetTheGame()->GetPlayableActor());
 	

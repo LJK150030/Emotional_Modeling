@@ -124,7 +124,7 @@ void SocialRelation::LogSocialRelation( Actor* from, Actor* to )
 	
 	std::vector<SocialRole> m_socialHistory = m_socialMap[std::pair<Actor*, Actor*>(from, to)];
 
-	std::string header = "instance,";
+	std::string header = "time,";
 
 	for(int name_idx = 0; name_idx < NUM_SOCIAL_ASPECT; ++name_idx)
 	{

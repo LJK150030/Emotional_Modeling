@@ -8,6 +8,9 @@
     <Filter Include="Data">
       <UniqueIdentifier>{708d39a6-5742-4990-868d-6e953e4ef68b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="General\Hardcode">
+      <UniqueIdentifier>{485c5424-7231-4004-aacf-b1448ce87437}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main_Windows.cpp">
@@ -28,21 +31,6 @@
     <ClCompile Include="Actor.cpp">
       <Filter>General</Filter>
     </ClCompile>
-    <ClCompile Include="Personality.cpp">
-      <Filter>General</Filter>
-    </ClCompile>
-    <ClCompile Include="EmotionalState.cpp">
-      <Filter>General</Filter>
-    </ClCompile>
-    <ClCompile Include="Emotion.cpp">
-      <Filter>General</Filter>
-    </ClCompile>
-    <ClCompile Include="SocialRelation.cpp">
-      <Filter>General</Filter>
-    </ClCompile>
-    <ClCompile Include="SocialRole.cpp">
-      <Filter>General</Filter>
-    </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>General</Filter>
     </ClCompile>
@@ -50,16 +38,31 @@
       <Filter>General</Filter>
     </ClCompile>
     <ClCompile Include="Attitude.cpp">
-      <Filter>General</Filter>
-    </ClCompile>
-    <ClCompile Include="Praise.cpp">
-      <Filter>General</Filter>
+      <Filter>General\Hardcode</Filter>
     </ClCompile>
     <ClCompile Include="AttitudeRelation.cpp">
-      <Filter>General</Filter>
+      <Filter>General\Hardcode</Filter>
+    </ClCompile>
+    <ClCompile Include="Emotion.cpp">
+      <Filter>General\Hardcode</Filter>
+    </ClCompile>
+    <ClCompile Include="EmotionalState.cpp">
+      <Filter>General\Hardcode</Filter>
+    </ClCompile>
+    <ClCompile Include="Personality.cpp">
+      <Filter>General\Hardcode</Filter>
+    </ClCompile>
+    <ClCompile Include="Praise.cpp">
+      <Filter>General\Hardcode</Filter>
     </ClCompile>
     <ClCompile Include="PraiseRelation.cpp">
-      <Filter>General</Filter>
+      <Filter>General\Hardcode</Filter>
+    </ClCompile>
+    <ClCompile Include="SocialRelation.cpp">
+      <Filter>General\Hardcode</Filter>
+    </ClCompile>
+    <ClCompile Include="SocialRole.cpp">
+      <Filter>General\Hardcode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,21 +84,6 @@
     <ClInclude Include="Actor.hpp">
       <Filter>General</Filter>
     </ClInclude>
-    <ClInclude Include="Personality.hpp">
-      <Filter>General</Filter>
-    </ClInclude>
-    <ClInclude Include="EmotionalState.hpp">
-      <Filter>General</Filter>
-    </ClInclude>
-    <ClInclude Include="Emotion.hpp">
-      <Filter>General</Filter>
-    </ClInclude>
-    <ClInclude Include="SocialRelation.hpp">
-      <Filter>General</Filter>
-    </ClInclude>
-    <ClInclude Include="SocialRole.hpp">
-      <Filter>General</Filter>
-    </ClInclude>
     <ClInclude Include="Object.hpp">
       <Filter>General</Filter>
     </ClInclude>
@@ -103,16 +91,31 @@
       <Filter>General</Filter>
     </ClInclude>
     <ClInclude Include="Attitude.hpp">
-      <Filter>General</Filter>
-    </ClInclude>
-    <ClInclude Include="Praise.hpp">
-      <Filter>General</Filter>
+      <Filter>General\Hardcode</Filter>
     </ClInclude>
     <ClInclude Include="AttitudeRelation.hpp">
-      <Filter>General</Filter>
+      <Filter>General\Hardcode</Filter>
+    </ClInclude>
+    <ClInclude Include="Emotion.hpp">
+      <Filter>General\Hardcode</Filter>
+    </ClInclude>
+    <ClInclude Include="EmotionalState.hpp">
+      <Filter>General\Hardcode</Filter>
+    </ClInclude>
+    <ClInclude Include="Personality.hpp">
+      <Filter>General\Hardcode</Filter>
+    </ClInclude>
+    <ClInclude Include="Praise.hpp">
+      <Filter>General\Hardcode</Filter>
     </ClInclude>
     <ClInclude Include="PraiseRelation.hpp">
-      <Filter>General</Filter>
+      <Filter>General\Hardcode</Filter>
+    </ClInclude>
+    <ClInclude Include="SocialRelation.hpp">
+      <Filter>General\Hardcode</Filter>
+    </ClInclude>
+    <ClInclude Include="SocialRole.hpp">
+      <Filter>General\Hardcode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -127,5 +130,8 @@
     <FxCompile Include="..\..\Run\Data\HLSL\vbo.hlsl">
       <Filter>Data</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
