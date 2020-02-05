@@ -32,5 +32,6 @@ public:
 	//debug helpers
 	void DrawImguiGraph();
 	void LogSocialRelation( Actor* from, Actor* to );
+	void LogCertaintyOfRelations(Actor* from, Actor* to);
 };
 

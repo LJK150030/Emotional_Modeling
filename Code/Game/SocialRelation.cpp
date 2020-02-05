@@ -166,6 +166,56 @@ void SocialRelation::LogSocialRelation( Actor* from, Actor* to )
 	fclose(file);
 }
 
+void SocialRelation::LogCertaintyOfRelations(Actor* from, Actor* to)
+{
+	FILE* file = fopen("Data/Log/RelationsCertainty.csv", "w");
+
+	std::vector<SocialRole> m_socialHistory = m_socialMap[std::pair<Actor*, Actor*>(from, to)];
+
+	std::string header = "time,";
+	const int types_of_relationships = static_cast<int>(g_validRelationships.size());
+
+	for (int rel_idx = 0; rel_idx < types_of_relationships; ++rel_idx)
+	{
+		header.append(g_validRelationships[rel_idx]->GetDebugName());
+
+		if (rel_idx != types_of_relationships - 1)
+		{
+			header.append(",");
+		}
+		else
+		{
+			header.append("\n");
+		}
+	}
+
+	fwrite(header.c_str(), 1, header.length(), file);
+	
+	for(int instance = 0; instance < m_socialHistory.size(); ++instance)
+	{
+		std::string social_relation_instance = Stringf("%i,", instance);
+		
+		for (int rel_idx = 0; rel_idx < types_of_relationships; ++rel_idx)
+		{
+			const float value = m_socialHistory[instance].GetCertaintyOfRelationshipType(rel_idx);
+			social_relation_instance.append(std::to_string(value));
+
+			if (rel_idx != types_of_relationships - 1)
+			{
+				social_relation_instance.append(",");
+			}
+			else
+			{
+				social_relation_instance.append("\n");
+			}
+		}
+
+		fwrite(social_relation_instance.c_str(), 1, social_relation_instance.length(), file);
+	}
+	
+	fclose(file);
+}
+
 
 SocialRole SocialRelation::GetTheirRelationshipToMe(Actor* me, Actor* them)
 {

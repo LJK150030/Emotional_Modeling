@@ -472,6 +472,23 @@ RelationshipType* SocialRole::GetClosestRelationshipType()
 	return g_validRelationships[closest_relation_idx];
 }
 
+float SocialRole::GetCertaintyOfRelationshipType( int rel_idx)
+{
+	// k - nearest neighbor's, but k = 1, and each instance is a different classification 
+	Vec4 current_relationship(m_relationshipMakeup[0], m_relationshipMakeup[1],
+		m_relationshipMakeup[2], m_relationshipMakeup[3]);
+
+	Vec4 relationship_type(
+		g_validRelationships[rel_idx]->m_relationshipMakeup[0],
+		g_validRelationships[rel_idx]->m_relationshipMakeup[1],
+		g_validRelationships[rel_idx]->m_relationshipMakeup[2],
+		g_validRelationships[rel_idx]->m_relationshipMakeup[3]
+	);
+
+	const Vec4 direction = relationship_type - current_relationship;
+	return direction.GetLength();
+}
+
 float SocialRole::CertRelatDot(RelationshipType* relationship)
 {
 	// we know that our vectors will have a length between 0.0f and 1.0f

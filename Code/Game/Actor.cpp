@@ -383,6 +383,7 @@ void Actor::LogData( Actor* relations_with )
 	LogActionsExperienced();
 	m_emotionalState->LogEmotionalState();	
 	m_perceivedSocialRelation->LogSocialRelation(this, relations_with);
+	m_perceivedSocialRelation->LogCertaintyOfRelations(this, relations_with);
 }
 
 void Actor::LogActionsExperienced()
